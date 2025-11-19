@@ -1,0 +1,117 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background: #fff;
+    min-height: 100vh;
+    color: #232526;
+}
+
+.container {
+    max-width: 900px;
+    margin: 64px auto 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 32px rgba(44, 62, 80, 0.08);
+    padding: 48px 56px 40px 56px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+.logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #232526;
+    letter-spacing: 2px;
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #232526;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+nav ul li a:hover {
+    color: #0077b6;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-family: 'Lato', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+.highlight {
+    color: #fff;
+    background: #0077b6;
+    padding: 0 8px;
+    border-radius: 6px;
+}
+.subtitle {
+    font-size: 1.2rem;
+    color: #0077b6;
+    margin-bottom: 0;
+}
+
+main {
+    margin-top: 40px;
+}
+section {
+    margin-bottom: 56px;
+}
+section h2 {
+    font-size: 1.4rem;
+    color: #232526;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    font-family: 'Lato', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+}
+.project-card {
+    background: #f5f5f5;
+    color: #232526;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+    padding: 18px 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.project-card:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 6px 18px rgba(44,62,80,0.15);
+}
+
+a {
+    color: #0077b6;
+    text-decoration: underline;
+}
+a:hover {
+    color: #232526;
+}
+
+footer {
+    text-align: center;
+    color: #fff;
+    background: #232526;
+    padding: 1rem;
+    border-radius: 0 0 18px 18px;
+    margin-top: 32px;
+    font-size: 1rem;
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Cinematography & Photography</title>
+    <link rel="stylesheet" href="../src/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #0A0A0A;
+            color: #1C1C1C;
+            font-family: 'Inter', Arial, sans-serif;
+            letter-spacing: 0.02em;
+        }
+        .container {
+            background: #111111;
+            border-radius: 10px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.30);
+            padding: 28px;
+            margin: 40px auto;
+            max-width: 900px;
+        }
+        .logo {
+            color: #C9A86A;
+            font-family: 'DM Sans', Arial, sans-serif;
+            font-weight: 500;
+        }
+        nav ul li a {
+            color: #C9A86A;
+            font-family: 'DM Sans', Arial, sans-serif;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        nav ul li a:hover {
+            color: #6BA4FF;
+        }
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: #C9A86A;
+            letter-spacing: 0.04em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #FAFAFA;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        section h2 {
+            color: #C9A86A;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        .card {
+            background: #111111;
+            border: 1px solid #EDEDED;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #C9A86A;
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-family: 'Inter', Arial, sans-serif;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            border: none;
+            cursor: pointer;
+            transition: filter 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary {
+            background: #C9A86A;
+            color: #0A0A0A;
+        }
+        .btn-primary:hover {
+            filter: brightness(1.1);
+        }
+        .btn-secondary {
+            background: #1C1C1C;
+            color: #FAFAFA;
+        }
+        .btn-secondary:hover {
+            filter: brightness(1.1);
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 2px;
+            font-weight: 600;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #D4D4D4;
+            font-family: 'Inter', Arial, sans-serif;
+            margin-bottom: 2px;
+            transition: border 0.2s;
+        }
+        .form-input:focus {
+            border-color: #0A0A0A;
+            outline: none;
+        }
+        .form-help {
+            font-size: 0.9rem;
+            color: #EDEDED;
+            margin-bottom: 6px;
+        }
+        .error {
+            color: #FF5A5A;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin: 28px 0;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            transition: box-shadow 0.2s, filter 0.2s;
+        }
+        .gallery-item img {
+            width: 100%;
+            display: block;
+            transition: filter 0.3s;
+        }
+        .gallery-item:hover img {
+            filter: brightness(0.85);
+        }
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.18);
+            opacity: 0.7;
+        }
+        footer {
+            background: #0A0A0A;
+            color: #C9A86A;
+            border-radius: 0 0 10px 10px;
+            margin-top: 28px;
+            padding: 20px;
+        }
+        /* Spacing */
+        .section {
+            padding: 28px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <span class="logo">Aadhitya Varshan</span>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <header>
+            <h1>Contact</h1>
+            <p class="subtitle">Cinematography & Photography Portfolio</p>
+        </header>
+        <main>
+            <section>
+                <h2>Get in Touch</h2>
+                <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
+            </section>
+        </main>
+        <footer>
+            &copy; 2025 Aadhitya Varshan
+        </footer>
+    </div>
+</body>
+</html>

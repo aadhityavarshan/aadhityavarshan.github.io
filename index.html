@@ -1,50 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Basic Website</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-    }
-    header {
-      background: #333;
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-    }
-    main {
-      padding: 2rem;
-      background: #fff;
-      margin: 2rem auto;
-      max-width: 600px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    footer {
-      background: #333;
-      color: #fff;
-      text-align: center;
-      padding: 1rem;
-      position: fixed;
-      width: 100%;
-      bottom: 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhitya Varshan | Portfolio</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <style>
+        .fullscreen-option {
+            flex: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.3s, background 0.2s;
+            will-change: transform, box-shadow;
+            cursor: pointer;
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+            animation: fadeInUp 0.8s forwards;
+        }
+        .fullscreen-option.left {
+            background: #0077b6;
+            color: #fff;
+            border-right: 2px solid #fff;
+            animation-delay: 0.2s;
+        }
+        .fullscreen-option.right {
+            background: #232526;
+            color: #fff;
+            animation-delay: 0.5s;
+        }
+        .fullscreen-option:hover {
+            transform: scale(1.04) translateY(-8px);
+            box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+            z-index: 2;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to My Basic Website</h1>
-  </header>
-  <main>
-    <h2>Hello, World!</h2>
-    <p>This is a simple website created with HTML and CSS.</p>
-  </main>
-  <footer>
-    &copy; 2025 Your Name
-  </footer>
+    <div id="fullscreen-root" style="height: 100vh; width: 100vw; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff;">
+        <nav style="width: 100%; position: absolute; top: 0; left: 0; padding: 24px 0; background: none; text-align: center;">
+        </nav>
+        <div style="flex: 1; display: flex; width: 100vw; height: 100vh; justify-content: center; align-items: center; gap: 0;">
+            <a href="cinematography/about.html" class="fullscreen-option left">
+                <span style="margin-bottom: 24px;">Cinematography & Photography</span>
+            </a>
+            <a href="datascience/about.html" class="fullscreen-option right">
+                <span style="margin-bottom: 24px;">Data Science & Programming</span>
+            </a>
+        </div>
+        <footer style="width: 100%; position: absolute; bottom: 0; left: 0; text-align: center; padding: 16px 0; background: none; color: #232526; font-size: 1rem;">
+        </footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+        document.querySelectorAll('.fullscreen-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const root = document.getElementById('fullscreen-root');
+                root.style.transition = 'opacity 0.7s cubic-bezier(.68,-0.55,.27,1.55)';
+                root.style.opacity = '0';
+                setTimeout(() => {
+                    window.location.href = this.getAttribute('href');
+                }, 650);
+            });
+        });
+    </script>
 </body>
 </html>

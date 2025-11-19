@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Cinematography & Photography</title>
+    <link rel="stylesheet" href="../src/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Inter:wght@400;600&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #FFFFFF;
+            color: #2B2B2B;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .container {
+            background: #E8E2D9;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(244,241,236,0.18);
+            padding: 24px;
+            margin: 48px auto;
+            max-width: 900px;
+        }
+        .logo {
+            color: #D9A96E;
+            font-family: 'DM Sans', Arial, sans-serif;
+            font-weight: 500;
+        }
+        nav ul li a {
+            color: #D9A96E;
+            font-family: 'DM Sans', Arial, sans-serif;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        nav ul li a:hover {
+            color: #8BB8FF;
+        }
+        header h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.6rem;
+            color: #D9A96E;
+            letter-spacing: 0.03em;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            color: #2B2B2B;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        section h2 {
+            color: #D9A96E;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+        .card {
+            background: #FAFAFA;
+            border: 1px solid #E0D8CC;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(232,226,217,0.10);
+        }
+        .card-title {
+            font-family: 'Libre Baskerville', serif;
+            font-weight: 700;
+            color: #D9A96E;
+            margin-bottom: 12px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-family: 'Inter', Arial, sans-serif;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(232,226,217,0.10);
+            border: none;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .btn-primary {
+            background: #D9A96E;
+            color: #2B2B2B;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px #D9A96E44;
+        }
+        .btn-secondary {
+            background: #E8E2D9;
+            color: #2B2B2B;
+        }
+        .btn-secondary:hover {
+            box-shadow: 0 4px 16px #E8E2D944;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 2px;
+            font-weight: 600;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #D6D0C8;
+            font-family: 'Inter', Arial, sans-serif;
+            margin-bottom: 2px;
+            transition: border 0.2s;
+        }
+        .form-input:focus {
+            border-color: #D9A96E;
+            outline: none;
+        }
+        .form-help {
+            font-size: 0.9rem;
+            color: #E0D8CC;
+            margin-bottom: 8px;
+        }
+        .error {
+            color: #FF6F6F;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 36px;
+            margin: 32px 0;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(232,226,217,0.10);
+            transition: box-shadow 0.2s, filter 0.2s;
+        }
+        .gallery-item img {
+            width: 100%;
+            display: block;
+            transition: filter 0.3s;
+        }
+        .gallery-item:hover img {
+            filter: brightness(0.92);
+        }
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.12);
+            opacity: 0.7;
+        }
+        footer {
+            background: #F4F1EC;
+            color: #D9A96E;
+            border-radius: 0 0 8px 8px;
+            margin-top: 32px;
+            padding: 24px;
+        }
+        /* Spacing */
+        .section {
+            padding: 32px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <span class="logo">Aadhitya Varshan</span>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <header>
+            <h1>About Me</h1>
+            <p class="subtitle">Cinematography & Photography Portfolio</p>
+        </header>
+        <main>
+            <section>
+                <h2>Who am I?</h2>
+                <p>I'm Aadhitya Varshan, passionate about visual storytelling through film and photography.</p>
+            </section>
+        </main>
+        <footer>
+            &copy; 2025 Aadhitya Varshan
+        </footer>
+    </div>
+</body>
+</html>

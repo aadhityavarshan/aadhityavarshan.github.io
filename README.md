@@ -1,40 +1,29 @@
-# Local Development Instructions
+# Aadhitya Varshan | Portfolio
 
-## Backend (Node.js/Express)
-1. Open a terminal and navigate to the `backend` folder:
-	```powershell
-	cd backend
-	```
-2. Install dependencies:
-	```powershell
-	npm install
-	```
-3. Start the backend server:
-	```powershell
-	node server.js
-	```
-	The backend will run at [http://localhost:3000](http://localhost:3000).
+## How to Run Locally (with Live Reload)
 
-## Frontend (HTML/CSS/JS)
-1. Open the `frontend/index.html` file in your browser.
-2. Click the button to call the backend API and see the response.
-
----
-
-## Workflow
-- Test locally using the above steps.
-- When ready, push changes to GitHub to update your website.
-
----
+1. Make sure you have Node.js installed.
+2. Open a terminal in your project folder.
+3. Run the following command to install dependencies:
+   ```powershell
+   npm install
+   ```
+4. Start the development server:
+   ```powershell
+   npm run dev
+   ```
+5. Open your browser and go to [http://localhost:5173](http://localhost:5173) (default Vite port).
+6. Any changes you make to your code will automatically update the website in your browser.
 
 ## Project Structure
 ```
-frontend/
-  index.html
+index.html
+src/
+  main.js
   style.css
-  script.js
-backend/
-  server.js
-  package.json
+package.json
 README.md
 ```
+
+## About
+This is a sleek, minimal, and colorful personal portfolio website. All code is in the `src` folder for easy local development and deployment. Powered by Vite for instant updates as you code.
