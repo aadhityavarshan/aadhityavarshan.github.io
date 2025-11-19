@@ -3,174 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Data Science & Programming</title>
+    <title>contact@aadhitya</title>
     <link rel="stylesheet" href="../src/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=IBM+Plex+Sans:wght@700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --bg: #020617;
+            --border-subtle: #1f2933;
+            --text-main: #e5e7eb;
+            --text-muted: #6b7280;
+            --accent: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+
         body {
-            background: #F5F6F7;
-            color: #1A1A1A;
-            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 32px 16px 48px;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            overscroll-behavior: none;
         }
-        .container {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(13,17,23,0.08);
-            padding: 24px;
-            margin: 32px auto;
+
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .shell {
             max-width: 900px;
-        }
-        .logo {
-            color: #3B82F6;
-            font-family: 'IBM Plex Sans', Arial, sans-serif;
-            font-weight: 700;
-        }
-        nav ul li a {
-            color: #3B82F6;
-            font-family: 'Inter', Arial, sans-serif;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-        nav ul li a:hover {
-            color: #10B981;
-        }
-        header h1 {
-            font-family: 'IBM Plex Sans', Arial, sans-serif;
-            font-size: 2.8rem;
-            color: #3B82F6;
-            margin-bottom: 8px;
-        }
-        .subtitle {
-            color: #1A1A1A;
-            font-family: 'Inter', Arial, sans-serif;
-        }
-        section h2 {
-            color: #3B82F6;
-            font-family: 'IBM Plex Sans', Arial, sans-serif;
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-        }
-        .card {
-            background: #fff;
-            border: 1px solid #E6E6E6;
+            margin: 0 auto;
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(13,17,23,0.04);
+            border: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(3,7,18,0.98));
+            box-shadow:
+                0 0 0 1px rgba(15,23,42,0.8),
+                0 22px 45px rgba(0,0,0,0.85);
+            padding: 20px 22px 24px;
         }
-        .card-title {
-            font-family: 'IBM Plex Sans', Arial, sans-serif;
-            font-weight: 700;
-            color: #3B82F6;
-            margin-bottom: 8px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 24px;
-            border-radius: 10px;
-            font-family: 'Inter', Arial, sans-serif;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(13,17,23,0.10);
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        .btn-primary {
-            background: #3B82F6;
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #60A5FA;
-        }
-        .btn-secondary {
-            background: #10B981;
-            color: #fff;
-        }
-        .btn-secondary:hover {
-            background: #34D399;
-        }
-        .form-label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: 600;
-            font-family: 'Inter', Arial, sans-serif;
-        }
-        .form-input {
-            width: 100%;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #D1D5DB;
-            font-family: 'Inter', Arial, sans-serif;
-            margin-bottom: 4px;
-            transition: border 0.2s;
-        }
-        .form-input:focus {
-            border-color: #3B82F6;
-            outline: none;
-        }
-        .form-help {
-            font-size: 0.9rem;
-            color: #6B7280;
-            margin-bottom: 8px;
-        }
-        .code-block {
+
+        .shell-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            background: #1E1E1E;
-            color: #E6E6E6;
+            font-size: 0.78rem;
+            text-transform: lowercase;
+            color: var(--text-muted);
+        }
+
+        .shell-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .shell-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+        }
+
+        .shell-dot.red { background: #f97373; }
+        .shell-dot.yellow { background: #facc6b; }
+        .shell-dot.green { background: #4ade80; }
+
+        .shell-title {
+            border-radius: 999px;
+            padding: 2px 10px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.35);
+        }
+
+        .prompt {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 18px;
+        }
+
+        .prompt span.user { color: #22c55e; }
+        .prompt span.path { color: var(--accent); }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .logo {
+            color: var(--accent);
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        .logo span.handle {
+            color: #22c55e;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 18px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li a {
+            color: var(--text-muted);
+            position: relative;
+            padding-bottom: 2px;
+            transition: color 0.16s ease;
+        }
+
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 1px;
+            width: 0;
+            background: var(--accent);
+            transition: width 0.16s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 18px;
+        }
+
+        header h1 {
+            margin: 0 0 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .subtitle {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        main {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 18px;
+            font-size: 0.93rem;
+            line-height: 1.6;
+        }
+
+        section {
+            margin-bottom: 18px;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            text-transform: lowercase;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        section h2 {
+            margin: 0 0 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .contact-block {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            background: rgba(15,23,42,0.9);
             border-radius: 8px;
-            padding: 12px;
-            margin: 8px 0;
+            border: 1px solid rgba(148,163,184,0.45);
+            padding: 12px 14px;
+            margin-top: 8px;
+        }
+
+        .contact-line {
+            margin: 2px 0;
+            white-space: nowrap;
             overflow-x: auto;
         }
-        .code-keyword {
-            color: #06B6D4;
+
+        .hint {
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
         }
-        .error {
-            color: #EF4444;
-        }
-        .warning {
-            color: #F59E0B;
-        }
-        .success {
-            color: #22C55E;
-        }
+
         footer {
-            background: #F5F6F7;
-            color: #3B82F6;
-            border-radius: 0 0 12px 12px;
-            margin-top: 24px;
-            padding: 16px;
+            padding-top: 20px;
+            margin-top: 18px;
+            border-top: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
         }
-        /* Spacing */
-        .section {
-            padding: 24px 0;
+
+        .footer-tag {
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.45);
+            background: rgba(15,23,42,0.85);
+            color: var(--accent);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 10px 32px;
+            }
+            .shell {
+                padding: 16px 14px 20px;
+            }
+            nav ul {
+                gap: 12px;
+                font-size: 0.78rem;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="shell">
+
+        <div class="shell-header">
+            <div class="shell-dots">
+                <div class="shell-dot red"></div>
+                <div class="shell-dot yellow"></div>
+                <div class="shell-dot green"></div>
+            </div>
+            <div class="shell-title">contact.txt</div>
+        </div>
+
+        <div class="prompt">
+            <span class="user">aadhitya@dev</span><span class="path">:~/portfolio</span>$ cat contact.txt
+        </div>
+
         <nav>
-            <span class="logo">Aadhitya Varshan</span>
+            <div class="logo">
+                <span class="handle">aadhitya@dev</span>
+            </div>
             <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="projects.html">Projects</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="../index.html">home</a></li>
+                <li><a href="about.html">about</a></li>
+                <li><a href="projects.html">projects</a></li>
+                <li><a href="contact.html">contact</a></li>
             </ul>
         </nav>
+
         <header>
             <h1>Contact</h1>
-            <p class="subtitle">Data Science & Programming Portfolio</p>
+            <p class="subtitle">based in Gainesville, FL  |  open to remote and hybrid</p>
         </header>
+
         <main>
             <section>
-                <h2>Get in Touch</h2>
-                <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
+                <div class="section-label">// ping</div>
+                <h2>Reach Out</h2>
+                <p>If you want to talk about data science, machine learning or a project that needs clean execution, use any of these paths.</p>
+
+                <div class="contact-block">
+                    <div class="contact-line">$ echo "hi from you" | mail <a href="mailto:reachaadhityavarshan@gmail.com">reachaadhityavarshan@gmail.com</a></div>
+                    <div class="contact-line">$ open tel:+14078202223  # phone</div>
+                    <div class="contact-line">$ curl <a href="https://www.linkedin.com/in/aadhitya-vijaisenthil" target="_blank" rel="noopener">linkedin.com/in/aadhitya-vijaisenthil</a></div>
+                    <div class="contact-line">$ git clone <a href="https://github.com/aadhityavarshan" target="_blank" rel="noopener">github.com/aadhityavarshan</a></div>
+                    <div class="contact-line">$ open <a href="https://www.yourwebsite.com" target="_blank" rel="noopener">yourwebsite.com</a></div>
+                </div>
+
+                <p class="hint">Short, clear messages win. Tell me what problem you see, what data you have and what you want to change.</p>
             </section>
         </main>
+
         <footer>
-            &copy; 2025 Aadhitya Varshan
+            <span>&copy; 2025 aadhitya varshan</span>
+            <span class="footer-tag">channel: contact</span>
         </footer>
     </div>
 </body>
