@@ -5,182 +5,475 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Cinematography & Photography</title>
     <link rel="stylesheet" href="../src/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Inter:wght@400;500;600&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-root: #030712;
+            --bg-page: #f9fafb;
+            --bg-elevated: #020617;
+            --border-subtle: rgba(15, 23, 42, 0.12);
+            --border-strong: rgba(15, 23, 42, 0.25);
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --text-soft: #6b7280;
+            --accent: #fbbf24;
+            --accent-soft: rgba(251, 191, 36, 0.16);
+            --accent-strong: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0A0A0A;
-            color: #1C1C1C;
-            font-family: 'Inter', Arial, sans-serif;
-            letter-spacing: 0.02em;
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(15, 23, 42, 0.45), transparent 60%),
+                radial-gradient(circle at bottom, rgba(15, 23, 42, 0.85), transparent 60%),
+                var(--bg-root);
+            display: flex;
+            justify-content: center;
+            color: var(--text-main);
+            line-height: 1.7;
         }
-        .container {
-            background: #111111;
-            border-radius: 10px;
-            box-shadow: 0 6px 32px rgba(0,0,0,0.30);
-            padding: 28px;
-            margin: 40px auto;
-            max-width: 900px;
+
+        .page-shell {
+            width: 100%;
+            max-width: 1120px;
+            background: var(--bg-page);
+            margin: 32px 16px;
+            padding: 40px 52px 32px;
+            border-radius: 0;
+            border: 1px solid rgba(15, 23, 42, 0.15);
         }
+
+        @media (max-width: 900px) {
+            .page-shell {
+                padding: 28px 18px 24px;
+                margin: 24px 10px;
+            }
+        }
+
+        /* NAV */
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
         .logo {
-            color: #C9A86A;
-            font-family: 'DM Sans', Arial, sans-serif;
-            font-weight: 500;
-        }
-        nav ul li a {
-            color: #C9A86A;
-            font-family: 'DM Sans', Arial, sans-serif;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        nav ul li a:hover {
-            color: #6BA4FF;
-        }
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            color: #C9A86A;
-            letter-spacing: 0.04em;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: #FAFAFA;
-            font-family: 'Inter', Arial, sans-serif;
-        }
-        section h2 {
-            color: #C9A86A;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-        }
-        .card {
-            background: #111111;
-            border: 1px solid #EDEDED;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-        }
-        .card-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            color: #C9A86A;
-            margin-bottom: 10px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-family: 'Inter', Arial, sans-serif;
+            color: #0f172a;
+            font-family: 'DM Sans', system-ui, sans-serif;
             font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-            border: none;
-            cursor: pointer;
-            transition: filter 0.2s, box-shadow 0.2s;
+            font-size: 0.86rem;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            background: #0f172a;
+            color: #f9fafb;
+            border-radius: 0;
         }
-        .btn-primary {
-            background: #C9A86A;
-            color: #0A0A0A;
+
+        nav ul {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
-        .btn-primary:hover {
-            filter: brightness(1.1);
+
+        nav ul li a {
+            text-decoration: none;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-weight: 500;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            border-radius: 0;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-soft);
+            transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
         }
-        .btn-secondary {
-            background: #1C1C1C;
-            color: #FAFAFA;
+
+        nav ul li a:hover {
+            color: #111827;
+            border-color: var(--border-strong);
+            background: #e5e7eb;
         }
-        .btn-secondary:hover {
-            filter: brightness(1.1);
+
+        nav ul li a.active {
+            background: var(--accent-soft);
+            border-color: var(--accent-strong);
+            color: #111827;
         }
+
+        /* HEADER */
+
+        header {
+            padding: 40px 0 32px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: grid;
+            grid-template-columns: minmax(0, 2.3fr) minmax(0, 1.2fr);
+            gap: 32px;
+            align-items: flex-start;
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(2.4rem, 3.2vw, 2.8rem);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #d1d5db;
+        }
+
+        .subtitle {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #9ca3af;
+        }
+
+        .header-meta {
+            justify-self: flex-end;
+            text-align: right;
+            font-size: 0.8rem;
+        }
+
+        .header-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 0;
+            border: 1px solid var(--border-subtle);
+            background: #f3f4f6;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 0.72rem;
+        }
+
+        .header-tag-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent-strong);
+        }
+
+        /* MAIN LAYOUT */
+
+        main {
+            margin-top: 32px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 18px;
+            }
+
+            .header-meta {
+                justify-self: flex-start;
+                text-align: left;
+            }
+
+            main {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 32px;
+            }
+        }
+
+        section h2 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin: 0 0 8px;
+        }
+
+        section p {
+            margin: 0;
+            font-size: 0.96rem;
+            color: var(--text-muted);
+        }
+
+        .section-lead {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 18px;
+        }
+
+        /* FORM */
+
+        .card {
+            background: #020617;
+            border-radius: 0;
+            border: 1px solid rgba(15, 23, 42, 0.75);
+            padding: 18px 18px 16px;
+            color: #e5e7eb;
+        }
+
+        .card-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.92rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #f9fafb;
+            margin: 0 0 12px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
         .form-label {
             display: block;
-            margin-bottom: 2px;
-            font-weight: 600;
-            font-family: 'Inter', Arial, sans-serif;
+            margin-bottom: 4px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #e5e7eb;
         }
-        .form-input {
+
+        .form-input,
+        .form-textarea {
             width: 100%;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #D4D4D4;
-            font-family: 'Inter', Arial, sans-serif;
-            margin-bottom: 2px;
-            transition: border 0.2s;
-        }
-        .form-input:focus {
-            border-color: #0A0A0A;
-            outline: none;
-        }
-        .form-help {
+            padding: 8px 10px;
+            border-radius: 0;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            background: #020617;
+            color: #f9fafb;
+            font-family: 'Inter', system-ui, sans-serif;
             font-size: 0.9rem;
-            color: #EDEDED;
-            margin-bottom: 6px;
         }
-        .error {
-            color: #FF5A5A;
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-strong);
         }
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            margin: 28px 0;
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
         }
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-            transition: box-shadow 0.2s, filter 0.2s;
+
+        .form-help {
+            margin-top: 4px;
+            font-size: 0.78rem;
+            color: #9ca3af;
         }
-        .gallery-item img {
-            width: 100%;
-            display: block;
-            transition: filter 0.3s;
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 18px;
+            border-radius: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-weight: 500;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
         }
-        .gallery-item:hover img {
-            filter: brightness(0.85);
+
+        .btn-primary {
+            background: var(--accent-strong);
+            color: #020617;
+            border-color: var(--accent-strong);
         }
-        .gallery-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.18);
-            opacity: 0.7;
+
+        .btn-primary:hover {
+            background: #fbbf24;
         }
+
+        /* SIDE INFO */
+
+        .side-panel {
+            border-radius: 0;
+            border: 1px solid var(--border-subtle);
+            background: #f3f4f6;
+            padding: 18px 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .side-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #4b5563;
+        }
+
+        .side-block {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .side-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .side-value {
+            color: #111827;
+        }
+
+        .side-link {
+            color: #111827;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.4);
+        }
+
+        .side-link:hover {
+            border-bottom-color: rgba(55, 65, 81, 0.8);
+        }
+
+        /* FOOTER */
+
         footer {
-            background: #0A0A0A;
-            color: #C9A86A;
-            border-radius: 0 0 10px 10px;
-            margin-top: 28px;
-            padding: 20px;
+            margin-top: 48px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        /* Spacing */
-        .section {
-            padding: 28px 0;
+
+        footer span strong {
+            color: #dee2e9;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="page-shell">
         <nav>
             <span class="logo">Aadhitya Varshan</span>
             <ul>
                 <li><a href="../index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="projects.html">Projects</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
             </ul>
         </nav>
+
         <header>
-            <h1>Contact</h1>
-            <p class="subtitle">Cinematography & Photography Portfolio</p>
+            <div>
+                <h1>Contact</h1>
+                <p class="subtitle">Cinematography and photography portfolio</p>
+            </div>
+            <div class="header-meta">
+                <div class="header-tag">
+                    <span class="header-tag-dot"></span>
+                    <span>Available for new projects</span>
+                </div>
+            </div>
         </header>
+
         <main>
             <section>
-                <h2>Get in Touch</h2>
-                <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
+                <h2>Get in touch</h2>
+                <p class="section-lead">
+                    Tell me about the story you want to shoot. I reply to most messages within a day.
+                </p>
+
+                <div class="card">
+                    <h3 class="card-title">Project inquiry</h3>
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label" for="name">Name</label>
+                            <input class="form-input" type="text" id="name" name="name" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email</label>
+                            <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com">
+                            <div class="form-help">Share the email you check most often.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="project">Project type</label>
+                            <input class="form-input" type="text" id="project" name="project" placeholder="Short film, music video, brand piece">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="message">Message</label>
+                            <textarea class="form-textarea" id="message" name="message" placeholder="Timeline, budget range, and any references you already love."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send message</button>
+                    </form>
+                </div>
             </section>
+
+            <aside class="side-panel">
+                <div class="side-title">Direct contact</div>
+
+                <div class="side-block">
+                    <div class="side-label">Email</div>
+                    <div class="side-value">
+                        <a class="side-link" href="mailto:your.email@example.com">your.email@example.com</a>
+                    </div>
+                </div>
+
+                <div class="side-block">
+                    <div class="side-label">Based in</div>
+                    <div class="side-value">[Your city] · Available to travel</div>
+                </div>
+
+                <div class="side-block">
+                    <div class="side-label">Typical work</div>
+                    <div class="side-value">
+                        Narrative short films, music videos, brand spots, and stills for campaigns.
+                    </div>
+                </div>
+
+                <div class="side-block">
+                    <div class="side-label">Social</div>
+                    <div class="side-value">
+                        <a class="side-link" href="#" target="_blank" rel="noreferrer">Instagram</a>
+                        &nbsp;/&nbsp;
+                        <a class="side-link" href="#" target="_blank" rel="noreferrer">Vimeo</a>
+                    </div>
+                </div>
+            </aside>
         </main>
         <footer>
-            &copy; 2025 Aadhitya Varshan
+            <span>&copy; 2025 <strong>Aadhitya Varshan</strong></span>
         </footer>
     </div>
 </body>
