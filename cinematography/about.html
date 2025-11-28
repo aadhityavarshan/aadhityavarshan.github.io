@@ -6,18 +6,22 @@
     <title>About - Cinematography & Photography</title>
     <link rel="stylesheet" href="../src/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Inter:wght@400;500;600&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --bg-root: #030712;
-            --bg-page: #f9fafb;
-            --bg-elevated: #020617;
-            --border-subtle: rgba(15, 23, 42, 0.12);
-            --border-strong: rgba(15, 23, 42, 0.25);
-            --text-main: #111827;
-            --text-muted: #4b5563;
+            --bg-page: #0a0f1c;
+            --bg-elevated: #0f172a;
+
+            --border-subtle: rgba(148, 163, 184, 0.12);
+            --border-strong: rgba(148, 163, 184, 0.28);
+
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
             --text-soft: #6b7280;
+
             --accent: #fbbf24;
-            --accent-soft: rgba(251, 191, 36, 0.16);
+            --accent-soft: rgba(251, 191, 36, 0.12);
             --accent-strong: #f59e0b;
         }
 
@@ -30,8 +34,8 @@
             min-height: 100vh;
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background:
-                radial-gradient(circle at top, rgba(15, 23, 42, 0.45), transparent 60%),
-                radial-gradient(circle at bottom, rgba(15, 23, 42, 0.85), transparent 60%),
+                radial-gradient(circle at top, rgba(0, 0, 0, 0.25), transparent 60%),
+                radial-gradient(circle at bottom, rgba(0, 0, 0, 0.6), transparent 60%),
                 var(--bg-root);
             display: flex;
             justify-content: center;
@@ -46,7 +50,8 @@
             margin: 32px 16px;
             padding: 40px 52px 32px;
             border-radius: 0;
-            border: 1px solid rgba(15, 23, 42, 0.15);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
         }
 
         @media (max-width: 900px) {
@@ -75,8 +80,7 @@
             letter-spacing: 0.24em;
             text-transform: uppercase;
             padding: 8px 16px;
-            background: #0f172a;
-            color: #f9fafb;
+            background: #e5e7eb;
             border-radius: 0;
         }
 
@@ -100,20 +104,20 @@
             border-radius: 0;
             border: 1px solid transparent;
             background: transparent;
-            color: var(--text-soft);
+            color: var(--text-muted);
             transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
         }
 
         nav ul li a:hover {
-            color: #111827;
+            color: var(--text-main);
             border-color: var(--border-strong);
-            background: #e5e7eb;
+            background: rgba(255, 255, 255, 0.06);
         }
 
         nav ul li a.active {
             background: var(--accent-soft);
             border-color: var(--accent-strong);
-            color: #111827;
+            color: var(--accent);
         }
 
         /* HEADER */
@@ -133,13 +137,13 @@
             font-size: clamp(2.4rem, 3.2vw, 2.8rem);
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: #d1d5db;
+            color: #f3f4f6;
         }
 
         .subtitle {
             margin: 0;
             font-size: 0.95rem;
-            color: #9ca3af;
+            color: var(--text-muted);
         }
 
         .header-meta {
@@ -155,8 +159,8 @@
             padding: 8px 14px;
             border-radius: 0;
             border: 1px solid var(--border-subtle);
-            background: #f3f4f6;
-            color: #374151;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-main);
             text-transform: uppercase;
             letter-spacing: 0.14em;
             font-size: 0.72rem;
@@ -169,7 +173,7 @@
             background: var(--accent-strong);
         }
 
-        /* MAIN LAYOUT */
+        /* MAIN */
 
         main {
             margin-top: 32px;
@@ -189,7 +193,7 @@
             font-size: 0.9rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: var(--text-soft);
+            color: var(--text-muted);
             margin: 0;
         }
 
@@ -204,14 +208,14 @@
             color: var(--text-main);
         }
 
-        /* CONTENT BLOCKS */
+        /* CARD */
 
         .card {
-            background: #020617;
+            background: var(--bg-elevated);
             border-radius: 0;
-            border: 1px solid rgba(15, 23, 42, 0.75);
+            border: 1px solid var(--border-strong);
             padding: 22px 22px 18px;
-            color: #e5e7eb;
+            color: var(--text-main);
         }
 
         .card-title {
@@ -254,32 +258,32 @@
 
         .btn-primary {
             background: var(--accent-strong);
-            color: #020617;
+            color: #0a0f1c;
             border-color: var(--accent-strong);
         }
 
         .btn-primary:hover {
-            background: #fbbf24;
+            background: var(--accent);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #e5e7eb;
-            border-color: rgba(148, 163, 184, 0.7);
+            color: var(--text-main);
+            border-color: var(--border-strong);
         }
 
         .btn-secondary:hover {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        /* PROFILE COLUMN */
+        /* PROFILE SIDEBAR */
 
         .profile-card {
             border-radius: 0;
-            background: #020617;
-            border: 1px solid rgba(15, 23, 42, 0.7);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
             padding: 22px 22px 18px;
-            color: #e5e7eb;
+            color: var(--text-main);
             display: flex;
             flex-direction: column;
             gap: 18px;
@@ -289,7 +293,7 @@
             font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 0.18em;
-            color: #9ca3af;
+            color: var(--text-soft);
         }
 
         .profile-grid {
@@ -303,12 +307,12 @@
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.16em;
-            color: #6b7280;
+            color: var(--text-soft);
             margin-bottom: 4px;
         }
 
         .profile-item-value {
-            color: #e5e7eb;
+            color: var(--text-main);
         }
 
         .profile-pill {
@@ -316,12 +320,12 @@
             align-items: center;
             padding: 7px 14px;
             border-radius: 0;
-            border: 1px solid rgba(148, 163, 184, 0.8);
-            background: transparent;
+            border: 1px solid var(--border-strong);
+            background: rgba(255, 255, 255, 0.05);
             font-size: 0.78rem;
             letter-spacing: 0.16em;
             text-transform: uppercase;
-            color: #e5e7eb;
+            color: var(--text-main);
         }
 
         /* FOOTER */
@@ -331,7 +335,7 @@
             padding-top: 18px;
             border-top: 1px solid var(--border-subtle);
             font-size: 0.8rem;
-            color: var(--text-soft);
+            color: var(--text-muted);
             display: flex;
             justify-content: space-between;
             gap: 12px;
@@ -339,8 +343,10 @@
         }
 
         footer span strong {
-            color: #dee2e9;
+            color: var(--text-main);
         }
+
+        /* RESPONSIVE */
 
         @media (max-width: 900px) {
             header {
@@ -377,6 +383,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="page-shell">
         <nav>
@@ -407,6 +414,7 @@
                 <p class="section-lead">
                     i am aadhi. i focus on visual storytelling through motion, light, and rhythm.
                 </p>
+
                 <div class="card">
                     <h3 class="card-title">What I shoot</h3>
                     <p>
@@ -421,6 +429,7 @@
 
             <aside class="profile-card">
                 <div class="profile-label">Profile</div>
+
                 <div class="profile-grid">
                     <div>
                         <div class="profile-item-label">Role</div>
@@ -439,12 +448,14 @@
                         <div class="profile-item-value">Digital and film</div>
                     </div>
                 </div>
+
                 <div>
                     <span class="profile-item-label">Currently</span>
                     <div class="profile-pill">Open to collaborations</div>
                 </div>
             </aside>
         </main>
+
         <footer>
             <span>&copy; 2025 <strong>Aadhitya Varshan</strong></span>
         </footer>
