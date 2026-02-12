@@ -30,4 +30,4 @@ README.md
 ```
 
 ## About
-This is a sleek, minimal, and colorful personal portfolio website focused on coding and data science projects. The main page features an interactive brain visualization that links to your data science portfolio. All code is in the `src` folder for easy local development and deployment. Powered by Vite for instant updates as you code.
+This is a personal portfolio website focused on coding and data science projects. Visitors are automatically redirected to your data science portfolio page. All code is in the `src` folder for easy local development and deployment. Powered by Vite for instant updates as you code.
