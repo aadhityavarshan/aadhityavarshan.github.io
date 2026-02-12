@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>about@aadhitya</title>
+    <title>aadhitya@dev</title>
     <link rel="stylesheet" href="../src/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -170,7 +170,7 @@
         }
 
         section {
-            margin-bottom: 18px;
+            margin-bottom: 24px;
         }
 
         .section-label {
@@ -190,63 +190,53 @@
         }
 
         section p {
-            margin: 0;
+            margin: 0 0 12px 0;
         }
 
-        .xp-list {
+        .nav-links {
             display: grid;
-            gap: 10px;
-            margin-top: 6px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
         }
 
-        .xp-item {
+        .nav-card {
             border-radius: 8px;
             border: 1px solid rgba(148,163,184,0.35);
             background: rgba(15,23,42,0.85);
-            padding: 10px 12px;
+            padding: 14px 16px;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        .xp-role {
+        .nav-card:hover {
+            background: rgba(15,23,42,0.95);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+        }
+
+        .nav-card a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-card-title {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            margin-bottom: 2px;
-        }
-
-        .xp-meta {
-            font-size: 0.78rem;
-            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--accent);
             margin-bottom: 4px;
         }
 
-        .xp-body {
-            font-size: 0.86rem;
-        }
-
-        .edu-item,
-        .lead-item {
-            margin-top: 6px;
-            font-size: 0.9rem;
-        }
-
-        .tag-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            padding: 3px 8px;
-            border-radius: 999px;
-            border: 1px solid rgba(148,163,184,0.45);
-            background: rgba(15,23,42,0.9);
+        .nav-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
 
         footer {
             padding-top: 20px;
-            margin-top: 18px;
+            margin-top: 24px;
             border-top: 1px solid var(--border-subtle);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
@@ -279,6 +269,9 @@
             header h1 {
                 font-size: 1.5rem;
             }
+            .nav-links {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -291,11 +284,11 @@
                 <div class="shell-dot yellow"></div>
                 <div class="shell-dot green"></div>
             </div>
-            <div class="shell-title">about.txt</div>
+            <div class="shell-title">home.txt</div>
         </div>
 
         <div class="prompt">
-            <span class="user">aadhitya@dev</span><span class="path">:~/portfolio</span>$ cat about.txt
+            <span class="user">aadhitya@dev</span><span class="path">:~/portfolio</span>$ cat home.txt
         </div>
 
         <nav>
@@ -311,128 +304,42 @@
         </nav>
 
         <header>
-            <h1>About Me</h1>
-            <p class="subtitle">data science, machine learning and real world impact</p>
+            <h1>Aadhitya Varshan</h1>
+            <p class="subtitle">data science • machine learning • real world impact</p>
         </header>
 
         <main>
             <section>
-                <div class="section-label">// whoami</div>
-                <h2>Identity</h2>
-                <p>I am Aadhitya Varshan. I study data science at the University of Florida in Gainesville. I like using Python, stats and clean code to ship things that move real systems.</p>
+                <div class="section-label">// welcome</div>
+                <h2>Portfolio</h2>
+                <p>I'm a data scientist and developer focused on building systems that move real data into real decisions. I work with Python, machine learning and clean engineering to solve problems in healthcare, supply chain and beyond.</p>
+                <p>Explore what I've been working on below.</p>
             </section>
 
             <section>
-                <div class="section-label">// objective</div>
-                <h2>Focus</h2>
-                <p>I am looking for roles in data science and machine learning. I want to work on real problems where data and models change how teams act, especially in healthcare, supply chain and engineering.</p>
-            </section>
-
-            <section>
-                <div class="section-label">// experience</div>
-                <h2>Recent Work</h2>
-                <div class="xp-list">
-                    <div class="xp-item">
-                        <div class="xp-role">Data Engineering Intern @ Lockheed Martin</div>
-                        <div class="xp-meta">Python, Tableau, Grafana  |  Orlando, FL  |  May 2025 - Aug 2025</div>
-                        <div class="xp-body">
-                            Built dashboards that merged production and equipment data for real time insight. Helped avoid equipment failures and cut engineering time by around ninety percent.
-                        </div>
+                <div class="section-label">// navigate</div>
+                <h2>Sections</h2>
+                <div class="nav-links">
+                    <div class="nav-card">
+                        <a href="about.html">
+                            <div class="nav-card-title">about</div>
+                            <div class="nav-card-desc">learn about my background and experience</div>
+                        </a>
                     </div>
-                    <div class="xp-item">
-                        <div class="xp-role">Backend Developer @ Build Up</div>
-                        <div class="xp-meta">Flutter, Node.js  |  Orlando, FL  |  Aug 2024 - Nov 2024</div>
-                        <div class="xp-body">
-                            Studied payment adoption patterns and feedback to guide fintech features. Helped onboard local businesses faster and made merchant payments smoother.
-                        </div>
+                    <div class="nav-card">
+                        <a href="projects.html">
+                            <div class="nav-card-title">projects</div>
+                            <div class="nav-card-desc">see what I've built and what I'm learning</div>
+                        </a>
                     </div>
-                    <div class="xp-item">
-                        <div class="xp-role">Data Analyst @ Dartexon</div>
-                        <div class="xp-meta">React Native, Python  |  Orlando, FL  |  Sep 2022 - Dec 2022</div>
-                        <div class="xp-body">
-                            Automated data extraction with PyTesseract and OpenCV. Cut manual entry time by half and shipped a React Native dashboard for live shipping data.
-                        </div>
+                    <div class="nav-card">
+                        <a href="contact.html">
+                            <div class="nav-card-title">contact</div>
+                            <div class="nav-card-desc">get in touch and let's talk</div>
+                        </a>
                     </div>
                 </div>
             </section>
-
-            <section>
-                <div class="section-label">// education</div>
-                <h2>School</h2>
-                <div class="edu-item">
-                    B.S. in Data Science, University of Florida, Gainesville, FL  
-                    <br>Expected Graduation: Spring 2026
-                </div>
-            </section>
-
-            <section>
-                <div class="section-label">// skills</div>
-                <h2>Stack</h2>
-                <p>Tools I reach for when I need to move fast and still keep things readable.</p>
-                <div class="tag-grid">
-                    <span class="tag">Python</span>
-                    <span class="tag">R</span>
-                    <span class="tag">C++</span>
-                    <span class="tag">SQL</span>
-                    <span class="tag">Dart</span>
-                    <span class="tag">JavaScript</span>
-                    <span class="tag">React</span>
-                    <span class="tag">React Native</span>
-                    <span class="tag">Flask</span>
-                    <span class="tag">Node.js</span>
-                    <span class="tag">Flutter</span>
-                    <span class="tag">PostgreSQL</span>
-                    <span class="tag">DuckDB</span>
-                    <span class="tag">Firebase</span>
-                    <span class="tag">Machine learning</span>
-                    <span class="tag">Deep learning</span>
-                    <span class="tag">Time series</span>
-                    <span class="tag">NLP</span>
-                    <span class="tag">Pandas</span>
-                    <span class="tag">NumPy</span>
-                    <span class="tag">Tableau</span>
-                    <span class="tag">Grafana</span>
-                </div>
-            </section>
-
-            <section>
-                <div class="section-label">// leadership</div>
-                <h2>Community</h2>
-
-                <div class="xp-list">
-
-                    <div class="xp-item">
-                        <div class="xp-role">Internal Vice President</div>
-                        <div class="xp-meta">Data Science and Informatics Club · University of Florida</div>
-                        <div class="xp-body">
-                            I help run operations, plan events and work with the board on strategy, speakers and partnerships.
-                            Helped secure around ten thousand dollars in sponsorships and led projects that apply machine learning
-                            and visualization to real datasets.
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section>
-                <div class="section-label">// honors</div>
-                <h2>Signals</h2>
-
-                <div class="xp-list">
-
-                    <div class="xp-item">
-                        <div class="xp-role">UF AI Scholars Program 2025</div>
-                        <div class="xp-meta">University of Florida · Research Track</div>
-                        <div class="xp-body">
-                            Selected for a program focused on AI and data science applied to clinical and engineering problems.
-                            Worked on structured EHR analysis and model development feeding into active research.
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
 
         </main>
 
