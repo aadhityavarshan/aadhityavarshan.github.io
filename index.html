@@ -60,11 +60,6 @@
         filter 0.22s ease;
     }
 
-    .brain-path.left {
-      stroke: #f3a7ff;
-      fill: rgba(243, 167, 255, 0.07);
-    }
-
     .brain-path.right {
       stroke: #8cc7ff;
       fill: rgba(140, 199, 255, 0.07);
@@ -100,12 +95,6 @@
       transform: translateY(-50%);
     }
 
-    .preview-left {
-      right: 100%;
-      margin-right: 16px;
-      text-align: left;
-    }
-
     .preview-right {
       left: 100%;
       margin-left: 16px;
@@ -138,38 +127,6 @@
       color: #a1a1aa;
     }
 
-    .legend {
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      opacity: 0.7;
-      text-align: center;
-    }
-
-    .legend-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .legend-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-    }
-
-    .legend-dot.left {
-      background: #f3a7ff;
-    }
-
-    .legend-dot.right {
-      background: #8cc7ff;
-    }
-
     @media (max-width: 800px) {
       .brain-wrapper {
         width: 190px;
@@ -190,11 +147,6 @@
       .preview.show {
         transform: translateX(-50%);
       }
-
-      .legend {
-        flex-direction: column;
-        gap: 10px;
-      }
     }
   </style>
 </head>
@@ -203,15 +155,6 @@
   <div class="container">
     <div class="brain-wrapper">
       <svg class="brain-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-        <!-- Left lobe: more complex shape -->
-        <path
-          id="brain-left"
-          class="brain-path left"
-          d="M126 34c-14 0-27 4.5-37 13.5C78 57 72 69 72 82c0 4.5.5 8.5 1.6 12.5-9.3 5.5-17.1 15.6-19.3 27.7C52 125 52 128 52 131c0 22.5 15.4 41 36 44.8 1.8 7.8 5.7 14.4 11 19.4 5.7 5.4 13 8.8 21 8.8H126V34Z"
-          stroke-width="5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
         <!-- Right lobe: more complex shape -->
         <path
           id="brain-right"
@@ -222,27 +165,14 @@
           stroke-linejoin="round"
         />
 
-        <!-- Some inner squiggles just to make it look more brain like -->
-        <path d="M112 60c-10 2-18 9-20 18" stroke="#f3a7ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-        <path d="M108 86c-7 1-12 5-14 11" stroke="#f3a7ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+        <!-- Inner squiggles for the right brain -->
         <path d="M144 60c10 2 18 9 20 18" stroke="#8cc7ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
         <path d="M148 86c7 1 12 5 14 11" stroke="#8cc7ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
       </svg>
 
-      <div class="preview preview-left" id="preview-left">
-        <div class="preview-label">Left Brain · Visual</div>
-        <div class="preview-title">Visual Craft</div>
-        <div class="preview-text">
-          Cinematography and photography work that focuses on story, rhythm and light. Short films, reels and stills built to feel alive.
-        </div>
-        <div class="preview-meta">
-          Highlights: narrative pieces, concert coverage, portrait sets.
-        </div>
-      </div>
-
       <div class="preview preview-right" id="preview-right">
-        <div class="preview-label">Right Brain · Logic</div>
-        <div class="preview-title">Logic Build</div>
+        <div class="preview-label">Logic Build</div>
+        <div class="preview-title">Coding & Data Science</div>
         <div class="preview-text">
           Data science and programming projects that turn raw information into clean systems. Models, tools and backends with intent.
         </div>
@@ -251,42 +181,22 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <script>
-    const leftPath = document.getElementById("brain-left");
     const rightPath = document.getElementById("brain-right");
-    const leftPreview = document.getElementById("preview-left");
     const rightPreview = document.getElementById("preview-right");
-
-    function showLeft() {
-      leftPreview.classList.add("show");
-      rightPreview.classList.remove("show");
-    }
-
-    function hideLeft() {
-      leftPreview.classList.remove("show");
-    }
 
     function showRight() {
       rightPreview.classList.add("show");
-      leftPreview.classList.remove("show");
     }
 
     function hideRight() {
       rightPreview.classList.remove("show");
     }
 
-    leftPath.addEventListener("mouseenter", showLeft);
-    leftPath.addEventListener("mouseleave", hideLeft);
-
     rightPath.addEventListener("mouseenter", showRight);
     rightPath.addEventListener("mouseleave", hideRight);
-
-    leftPath.addEventListener("click", () => {
-      window.location.href = "cinematography/about.html";
-    });
 
     rightPath.addEventListener("click", () => {
       window.location.href = "datascience/about.html";
