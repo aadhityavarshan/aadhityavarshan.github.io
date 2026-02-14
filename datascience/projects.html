@@ -116,6 +116,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            flex-wrap: wrap;
         }
 
         nav ul li a {
@@ -190,7 +191,8 @@
         }
 
         section p {
-            margin: 0;
+            margin: 0 0 12px 0;
+            line-height: 1.6;
         }
 
         .project-list {
@@ -204,12 +206,43 @@
             border-radius: 8px;
             border: 1px solid rgba(148,163,184,0.35);
             background: rgba(15,23,42,0.85);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-item:hover {
+            background: rgba(15,23,42,0.95);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+            transform: translateY(-2px);
         }
 
         .project-title {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.92rem;
             margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .project-title::before {
+            content: '$';
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .expand-icon {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: var(--accent);
+            transition: transform 0.3s ease;
+        }
+
+        .project-item.expanded .expand-icon {
+            transform: rotate(180deg);
         }
 
         .project-meta {
@@ -220,6 +253,100 @@
 
         .project-body {
             font-size: 0.86rem;
+            line-height: 1.6;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease, margin-top 0.3s ease;
+        }
+
+        .project-item.expanded .project-body {
+            max-height: 800px;
+            opacity: 1;
+            margin-top: 8px;
+        }
+
+        .code-snippet {
+            background: rgba(0,0,0,0.4);
+            border-left: 3px solid var(--accent);
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            display: none;
+            white-space: pre;
+        }
+
+        .code-snippet::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .code-snippet::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+
+        .code-snippet::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .project-item.expanded .code-snippet {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .code-snippet .comment { color: #6b7280; }
+        .code-snippet .keyword { color: #c678dd; }
+        .code-snippet .string { color: #98c379; }
+        .code-snippet .function { color: #61afef; }
+
+        .terminal-command {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            opacity: 0;
+        }
+
+        .project-item.expanded .terminal-command {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(148,163,184,0.35);
+            background: rgba(15,23,42,0.85);
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(15,23,42,0.95);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
         }
 
         footer {
@@ -250,12 +377,27 @@
             .shell {
                 padding: 16px 14px 20px;
             }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            nav > div {
+                width: 100%;
+                justify-content: space-between !important;
+            }
             nav ul {
                 gap: 12px;
                 font-size: 0.78rem;
             }
             header h1 {
                 font-size: 1.5rem;
+            }
+            .project-title {
+                font-size: 0.85rem;
+            }
+            .expand-icon {
+                font-size: 0.65rem;
             }
         }
     </style>
@@ -280,12 +422,15 @@
             <div class="logo">
                 <span class="handle">aadhitya@dev</span>
             </div>
-            <ul>
-                <li><a href="home.html">home</a></li>
-                <li><a href="about.html">about</a></li>
-                <li><a href="projects.html">projects</a></li>
-                <li><a href="contact.html">contact</a></li>
-            </ul>
+            <div style="display: flex; align-items: center; gap: 18px;">
+                <ul>
+                    <li><a href="home.html">home</a></li>
+                    <li><a href="about.html">about</a></li>
+                    <li><a href="projects.html">projects</a></li>
+                    <li><a href="contact.html">contact</a></li>
+                </ul>
+                <button class="theme-toggle" id="themeToggle">[ ◐ ]</button>
+            </div>
         </nav>
 
         <header>
@@ -299,35 +444,57 @@
                 <h2>Research And Builds</h2>
                 <div class="project-list">
 
-                    <div class="project-item">
-                        <div class="project-title">llm-sicu-ehr</div>
+                    <div class="project-item" onclick="toggleProject(this)">
+                        <div class="project-title">llm-sicu-ehr<span class="expand-icon">▼</span></div>
                         <div class="project-meta">Python, SQL, MCP, RAG, MIMIC 4 clinical dataset</div>
+                        <div class="terminal-command">$ cat llm-sicu-ehr/README.md</div>
                         <div class="project-body">
                             I am building an MCP powered language model on MIMIC 4 data, including NeuroICU patients. The system pulls structured EHR data in real time, runs retrieval augmented generation and SQL, and outputs abnormal events and care summaries that are ready for clinicians.
+                            <div class="code-snippet"><span class="comment"># Real-time patient monitoring</span>
+<span class="keyword">def</span> <span class="function">analyze_patient_vitals</span>(patient_id):
+    vitals = <span class="function">query_ehr</span>(patient_id)
+    abnormalities = <span class="function">rag_analyze</span>(vitals)
+    <span class="keyword">return</span> <span class="function">generate_summary</span>(abnormalities)</div>
                         </div>
                     </div>
 
-                    <div class="project-item">
-                        <div class="project-title">diy-shazam</div>
+                    <div class="project-item" onclick="toggleProject(this)">
+                        <div class="project-title">diy-shazam<span class="expand-icon">▼</span></div>
                         <div class="project-meta">Python, NumPy, signal processing, MFCC and chroma, CNNs, ANN search, HiPerGator</div>
+                        <div class="terminal-command">$ cat diy-shazam/fingerprint.py</div>
                         <div class="project-body">
                             Built an open source music recognition pipeline that uses audio fingerprinting with spectrogram peak pair hashing. Used approximate nearest neighbor search to match large audio datasets and tested accuracy and latency at scale. Explored deep learning on spectrograms to handle noise, tempo shifts and partial clips.
+                            <div class="code-snippet"><span class="comment"># Audio fingerprinting algorithm</span>
+<span class="keyword">def</span> <span class="function">create_fingerprint</span>(audio_samples):
+    spectrogram = <span class="function">compute_stft</span>(audio_samples)
+    peaks = <span class="function">find_spectral_peaks</span>(spectrogram)
+    <span class="keyword">return</span> <span class="function">hash_peak_pairs</span>(peaks)</div>
                         </div>
                     </div>
 
-                    <div class="project-item">
-                        <div class="project-title">space-pv-materials</div>
+                    <div class="project-item" onclick="toggleProject(this)">
+                        <div class="project-title">space-pv-materials<span class="expand-icon">▼</span></div>
                         <div class="project-meta">Python, JARVIS, LightGBM, XGBoost, Random Forest, DFT plus eDMFT</div>
+                        <div class="terminal-command">$ python train_pv_model.py --materials jarvis</div>
                         <div class="project-body">
                             Trained models like LightGBM and XGBoost on around ten thousand materials from the JARVIS database to classify strong photovoltaic candidates. Ran DFT plus eDMFT and phonon calculations to study threshold energy and vibrational stability. Used OMERE and SR NIEL to model radiation damage and end of life performance, and shipped a shortlist of durable PV materials for space missions.
+                            <div class="code-snippet"><span class="comment"># Machine learning pipeline for materials</span>
+<span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+model = lgb.<span class="function">LGBMClassifier</span>(n_estimators=<span class="string">1000</span>)
+model.<span class="function">fit</span>(material_features, pv_efficiency_labels)</div>
                         </div>
                     </div>
 
-                    <div class="project-item">
-                        <div class="project-title">office-lease-mispricing</div>
+                    <div class="project-item" onclick="toggleProject(this)">
+                        <div class="project-title">office-lease-mispricing<span class="expand-icon">▼</span></div>
                         <div class="project-meta">Python, Savills data, BLS data, HHI, ML, Plotly Dash</div>
+                        <div class="terminal-command">$ python analyze_market.py --years 2015-2023</div>
                         <div class="project-body">
                             Analyzed United States office leasing data from 2015 to 2023 to find cities where rents and vacancy drift apart. Linked unemployment, leasing activity and vacancy to capture shifts in office demand. Built an interactive Plotly Dash app to watch rent, vacancy and building level opportunities in real time.
+                            <div class="code-snippet"><span class="comment"># Market analysis dashboard</span>
+<span class="keyword">import</span> plotly.express <span class="keyword">as</span> px
+fig = px.<span class="function">scatter</span>(df, x=<span class="string">'vacancy_rate'</span>,
+                  y=<span class="string">'rent_psf'</span>, color=<span class="string">'city'</span>)</div>
                         </div>
                     </div>
 
@@ -339,25 +506,28 @@
                 <h2>Analytics And Dashboards</h2>
                 <div class="project-list">
 
-                    <div class="project-item">
-                        <div class="project-title">production-health-dashboards</div>
+                    <div class="project-item" onclick="toggleProject(this)">
+                        <div class="project-title">production-health-dashboards<span class="expand-icon">▼</span></div>
                         <div class="project-meta">Lockheed Martin  |  Python, Tableau, Grafana</div>
+                        <div class="terminal-command">$ docker-compose up grafana-dashboard</div>
                         <div class="project-body">
                             Consolidated many production and equipment data sources into live dashboards. Helped teams see risk, plan maintenance and save cost from fewer failures.
                         </div>
                     </div>
 
-                    <div class="project-item">
-                        <div class="project-title">local-fintech-adoption</div>
+                    <div class="project-item" onclick="toggleProject(this)">
+                        <div class="project-title">local-fintech-adoption<span class="expand-icon">▼</span></div>
                         <div class="project-meta">Build Up  |  Flutter, Node.js, product analytics</div>
+                        <div class="terminal-command">$ node analyze_adoption.js --segment merchants</div>
                         <div class="project-body">
                             Studied payment behavior and feedback from users and merchants. Used this to shape features that drove adoption by new local businesses and made onboarding faster.
                         </div>
                     </div>
 
-                    <div class="project-item">
-                        <div class="project-title">logistics-ops-dashboard</div>
+                    <div class="project-item" onclick="toggleProject(this)">
+                        <div class="project-title">logistics-ops-dashboard<span class="expand-icon">▼</span></div>
                         <div class="project-meta">Dartexon  |  React Native, Python, OpenCV, PyTesseract</div>
+                        <div class="terminal-command">$ python ocr_pipeline.py --input documents/</div>
                         <div class="project-body">
                             Automated extraction from logistics documents with computer vision and shipped a live shipping dashboard. Cut manual data entry time by around fifty percent and improved supply chain visibility.
                         </div>
@@ -372,5 +542,98 @@
             <span class="footer-tag">mode: shipping</span>
         </footer>
     </div>
+
+    <canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.03;"></canvas>
+
+    <script>
+        // Toggle project expansion
+        function toggleProject(element) {
+            element.classList.toggle('expanded');
+        }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            applyLightTheme();
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'dark') {
+                applyLightTheme();
+                localStorage.setItem('theme', 'light');
+            } else {
+                applyDarkTheme();
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        function applyLightTheme() {
+            root.style.setProperty('--bg', '#f8f9fa');
+            root.style.setProperty('--border-subtle', '#dee2e6');
+            root.style.setProperty('--text-main', '#212529');
+            root.style.setProperty('--text-muted', '#6c757d');
+            root.style.setProperty('--accent', '#0077b6');
+            document.body.style.background = 'radial-gradient(circle at top, #e9ecef 0, #f8f9fa 55%, #fff 100%)';
+            document.querySelector('.shell').style.background = 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,249,250,0.98))';
+            document.querySelector('.shell').style.boxShadow = '0 0 0 1px rgba(222,226,230,0.8), 0 22px 45px rgba(0,0,0,0.1)';
+        }
+
+        function applyDarkTheme() {
+            root.style.setProperty('--bg', '#020617');
+            root.style.setProperty('--border-subtle', '#1f2933');
+            root.style.setProperty('--text-main', '#e5e7eb');
+            root.style.setProperty('--text-muted', '#6b7280');
+            root.style.setProperty('--accent', '#38bdf8');
+            document.body.style.background = 'radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%)';
+            document.querySelector('.shell').style.background = 'linear-gradient(135deg, rgba(15,23,42,0.95), rgba(3,7,18,0.98))';
+            document.querySelector('.shell').style.boxShadow = '0 0 0 1px rgba(15,23,42,0.8), 0 22px 45px rgba(0,0,0,0.85)';
+        }
+
+        // Matrix rain background
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height / fontSize;
+        }
+
+        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>

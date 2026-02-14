@@ -100,6 +100,24 @@
             font-size: 0.8rem;
         }
 
+        .theme-toggle {
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(148,163,184,0.35);
+            background: rgba(15,23,42,0.85);
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(15,23,42,0.95);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+        }
+
         .logo {
             color: var(--accent);
             letter-spacing: 0.03em;
@@ -116,6 +134,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            flex-wrap: wrap;
         }
 
         nav ul li a {
@@ -191,6 +210,7 @@
 
         section p {
             margin: 0 0 12px 0;
+            line-height: 1.6;
         }
 
         .nav-links {
@@ -234,6 +254,76 @@
             color: var(--text-muted);
         }
 
+        .terminal-interactive {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(148,163,184,0.35);
+            background: rgba(0,0,0,0.3);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .terminal-output {
+            margin-bottom: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            min-height: 30px;
+        }
+
+        .terminal-output::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terminal-output::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+
+        .terminal-output::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .terminal-line {
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .terminal-line.command {
+            color: #22c55e;
+        }
+
+        .terminal-line.output {
+            color: var(--text-muted);
+            margin-left: 20px;
+        }
+
+        .terminal-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-input-wrapper .prompt-symbol {
+            color: #22c55e;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .terminal-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
         footer {
             padding-top: 20px;
             margin-top: 24px;
@@ -262,6 +352,15 @@
             .shell {
                 padding: 16px 14px 20px;
             }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            nav > div {
+                width: 100%;
+                justify-content: space-between !important;
+            }
             nav ul {
                 gap: 12px;
                 font-size: 0.78rem;
@@ -271,6 +370,9 @@
             }
             .nav-links {
                 grid-template-columns: 1fr;
+            }
+            .terminal-interactive {
+                padding: 12px;
             }
         }
     </style>
@@ -295,12 +397,15 @@
             <div class="logo">
                 <span class="handle">aadhitya@dev</span>
             </div>
-            <ul>
-                <li><a href="home.html">home</a></li>
-                <li><a href="about.html">about</a></li>
-                <li><a href="projects.html">projects</a></li>
-                <li><a href="contact.html">contact</a></li>
-            </ul>
+            <div style="display: flex; align-items: center; gap: 18px;">
+                <ul>
+                    <li><a href="home.html">home</a></li>
+                    <li><a href="about.html">about</a></li>
+                    <li><a href="projects.html">projects</a></li>
+                    <li><a href="contact.html">contact</a></li>
+                </ul>
+                <button class="theme-toggle" id="themeToggle">[ ◐ ]</button>
+            </div>
         </nav>
 
         <header>
@@ -312,8 +417,8 @@
             <section>
                 <div class="section-label">// welcome</div>
                 <h2>Portfolio</h2>
-                <p>I'm a data scientist and developer focused on building systems that move real data into real decisions. I work with Python, machine learning and clean engineering to solve problems in healthcare, supply chain and beyond.</p>
-                <p>Explore what I've been working on below.</p>
+                <p id="typing-text"></p>
+                <p id="typing-text-2" style="margin-top: 12px;"></p>
             </section>
 
             <section>
@@ -341,6 +446,18 @@
                 </div>
             </section>
 
+            <section>
+                <div class="section-label">// try me</div>
+                <h2>Interactive Terminal</h2>
+                <div class="terminal-interactive">
+                    <div class="terminal-output" id="terminalOutput"></div>
+                    <div class="terminal-input-wrapper">
+                        <span class="prompt-symbol">$</span>
+                        <input type="text" class="terminal-input" id="terminalInput" placeholder="try 'help', 'ls', 'whoami', 'skills'..." autocomplete="off" />
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <footer>
@@ -348,5 +465,181 @@
             <span class="footer-tag">status: building in public</span>
         </footer>
     </div>
+
+    <canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.03;"></canvas>
+
+    <script>
+        // Typing animation
+        const text1 = "I'm a data scientist and developer focused on building systems that move real data into real decisions. I work with Python, machine learning and clean engineering to solve problems in healthcare, supply chain and beyond.";
+        const text2 = "Explore what I've been working on below.";
+        let index1 = 0;
+        let index2 = 0;
+
+        function typeWriter1() {
+            if (index1 < text1.length) {
+                document.getElementById('typing-text').textContent += text1.charAt(index1);
+                index1++;
+                setTimeout(typeWriter1, 15);
+            } else {
+                setTimeout(typeWriter2, 200);
+            }
+        }
+
+        function typeWriter2() {
+            if (index2 < text2.length) {
+                document.getElementById('typing-text-2').textContent += text2.charAt(index2);
+                index2++;
+                setTimeout(typeWriter2, 20);
+            }
+        }
+
+        // Start typing animation after page load
+        window.addEventListener('load', () => {
+            setTimeout(typeWriter1, 500);
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            applyLightTheme();
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'dark') {
+                applyLightTheme();
+                localStorage.setItem('theme', 'light');
+            } else {
+                applyDarkTheme();
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        function applyLightTheme() {
+            root.style.setProperty('--bg', '#f8f9fa');
+            root.style.setProperty('--border-subtle', '#dee2e6');
+            root.style.setProperty('--text-main', '#212529');
+            root.style.setProperty('--text-muted', '#6c757d');
+            root.style.setProperty('--accent', '#0077b6');
+            document.body.style.background = 'radial-gradient(circle at top, #e9ecef 0, #f8f9fa 55%, #fff 100%)';
+            document.querySelector('.shell').style.background = 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,249,250,0.98))';
+            document.querySelector('.shell').style.boxShadow = '0 0 0 1px rgba(222,226,230,0.8), 0 22px 45px rgba(0,0,0,0.1)';
+        }
+
+        function applyDarkTheme() {
+            root.style.setProperty('--bg', '#020617');
+            root.style.setProperty('--border-subtle', '#1f2933');
+            root.style.setProperty('--text-main', '#e5e7eb');
+            root.style.setProperty('--text-muted', '#6b7280');
+            root.style.setProperty('--accent', '#38bdf8');
+            document.body.style.background = 'radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%)';
+            document.querySelector('.shell').style.background = 'linear-gradient(135deg, rgba(15,23,42,0.95), rgba(3,7,18,0.98))';
+            document.querySelector('.shell').style.boxShadow = '0 0 0 1px rgba(15,23,42,0.8), 0 22px 45px rgba(0,0,0,0.85)';
+        }
+
+        // Matrix rain background
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height / fontSize;
+        }
+
+        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Interactive terminal
+        const terminalInput = document.getElementById('terminalInput');
+        const terminalOutput = document.getElementById('terminalOutput');
+
+        const commands = {
+            help: 'Available commands: ls, whoami, skills, projects, contact, clear, date, secret',
+            ls: 'home.html  about.html  projects.html  contact.html  README.md',
+            whoami: 'aadhitya@dev - Data Scientist & Developer\nFocused on ML, healthcare, and real-world impact',
+            skills: 'Languages: Python, JavaScript, SQL\nML/DS: PyTorch, scikit-learn, pandas, NumPy\nTools: Git, Docker, Vite, Plotly\nDomains: Healthcare, Audio Processing, Materials Science',
+            projects: 'Main projects:\n→ llm-sicu-ehr (Clinical AI)\n→ diy-shazam (Audio fingerprinting)\n→ space-pv-materials (Materials ML)\n→ office-lease-mispricing (Market analysis)\n\nVisit /projects for details!',
+            contact: 'Let\'s connect! Check out the contact page for ways to reach me.',
+            date: new Date().toString(),
+            clear: 'CLEAR',
+            secret: '🎉 You found the easter egg! Keep exploring...\n\n"Any sufficiently advanced technology is indistinguishable from magic."\n- Arthur C. Clarke',
+            '': ''
+        };
+
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const command = terminalInput.value.trim().toLowerCase();
+
+                // Display command
+                const commandLine = document.createElement('div');
+                commandLine.className = 'terminal-line command';
+                commandLine.textContent = '$ ' + terminalInput.value;
+                terminalOutput.appendChild(commandLine);
+
+                // Process command
+                if (command === 'clear') {
+                    terminalOutput.innerHTML = '';
+                } else if (commands[command] !== undefined) {
+                    const output = document.createElement('div');
+                    output.className = 'terminal-line output';
+                    output.textContent = commands[command];
+                    output.style.whiteSpace = 'pre-line';
+                    terminalOutput.appendChild(output);
+                } else if (command !== '') {
+                    const output = document.createElement('div');
+                    output.className = 'terminal-line output';
+                    output.textContent = `Command not found: ${command}\nType 'help' for available commands.`;
+                    output.style.whiteSpace = 'pre-line';
+                    terminalOutput.appendChild(output);
+                }
+
+                // Clear input and scroll to bottom
+                terminalInput.value = '';
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+        });
+
+        // Display welcome message
+        window.addEventListener('load', () => {
+            const welcome = document.createElement('div');
+            welcome.className = 'terminal-line output';
+            welcome.textContent = 'Welcome! Type "help" to see available commands.';
+            terminalOutput.appendChild(welcome);
+        });
+    </script>
 </body>
 </html>

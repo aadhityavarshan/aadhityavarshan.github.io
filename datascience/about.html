@@ -100,6 +100,24 @@
             font-size: 0.8rem;
         }
 
+        .theme-toggle {
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(148,163,184,0.35);
+            background: rgba(15,23,42,0.85);
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(15,23,42,0.95);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+        }
+
         .logo {
             color: var(--accent);
             letter-spacing: 0.03em;
@@ -116,6 +134,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            flex-wrap: wrap;
         }
 
         nav ul li a {
@@ -190,7 +209,8 @@
         }
 
         section p {
-            margin: 0;
+            margin: 0 0 12px 0;
+            line-height: 1.6;
         }
 
         .xp-list {
@@ -204,6 +224,12 @@
             border: 1px solid rgba(148,163,184,0.35);
             background: rgba(15,23,42,0.85);
             padding: 10px 12px;
+            transition: all 0.2s ease;
+        }
+
+        .xp-item:hover {
+            background: rgba(15,23,42,0.95);
+            border-color: var(--accent);
         }
 
         .xp-role {
@@ -220,6 +246,7 @@
 
         .xp-body {
             font-size: 0.86rem;
+            line-height: 1.6;
         }
 
         .edu-item,
@@ -242,6 +269,12 @@
             border-radius: 999px;
             border: 1px solid rgba(148,163,184,0.45);
             background: rgba(15,23,42,0.9);
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
         footer {
@@ -272,12 +305,27 @@
             .shell {
                 padding: 16px 14px 20px;
             }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            nav > div {
+                width: 100%;
+                justify-content: space-between !important;
+            }
             nav ul {
                 gap: 12px;
                 font-size: 0.78rem;
             }
             header h1 {
                 font-size: 1.5rem;
+            }
+            .tag-grid {
+                gap: 4px;
+            }
+            .tag {
+                font-size: 0.72rem;
             }
         }
     </style>
@@ -302,12 +350,15 @@
             <div class="logo">
                 <span class="handle">aadhitya@dev</span>
             </div>
-            <ul>
-                <li><a href="home.html">home</a></li>
-                <li><a href="about.html">about</a></li>
-                <li><a href="projects.html">projects</a></li>
-                <li><a href="contact.html">contact</a></li>
-            </ul>
+            <div style="display: flex; align-items: center; gap: 18px;">
+                <ul>
+                    <li><a href="home.html">home</a></li>
+                    <li><a href="about.html">about</a></li>
+                    <li><a href="projects.html">projects</a></li>
+                    <li><a href="contact.html">contact</a></li>
+                </ul>
+                <button class="theme-toggle" id="themeToggle">[ ◐ ]</button>
+            </div>
         </nav>
 
         <header>
@@ -441,5 +492,93 @@
             <span class="footer-tag">status: building in public</span>
         </footer>
     </div>
+
+    <canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.03;"></canvas>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            applyLightTheme();
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'dark') {
+                applyLightTheme();
+                localStorage.setItem('theme', 'light');
+            } else {
+                applyDarkTheme();
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        function applyLightTheme() {
+            root.style.setProperty('--bg', '#f8f9fa');
+            root.style.setProperty('--border-subtle', '#dee2e6');
+            root.style.setProperty('--text-main', '#212529');
+            root.style.setProperty('--text-muted', '#6c757d');
+            root.style.setProperty('--accent', '#0077b6');
+            document.body.style.background = 'radial-gradient(circle at top, #e9ecef 0, #f8f9fa 55%, #fff 100%)';
+            document.querySelector('.shell').style.background = 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,249,250,0.98))';
+            document.querySelector('.shell').style.boxShadow = '0 0 0 1px rgba(222,226,230,0.8), 0 22px 45px rgba(0,0,0,0.1)';
+        }
+
+        function applyDarkTheme() {
+            root.style.setProperty('--bg', '#020617');
+            root.style.setProperty('--border-subtle', '#1f2933');
+            root.style.setProperty('--text-main', '#e5e7eb');
+            root.style.setProperty('--text-muted', '#6b7280');
+            root.style.setProperty('--accent', '#38bdf8');
+            document.body.style.background = 'radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%)';
+            document.querySelector('.shell').style.background = 'linear-gradient(135deg, rgba(15,23,42,0.95), rgba(3,7,18,0.98))';
+            document.querySelector('.shell').style.boxShadow = '0 0 0 1px rgba(15,23,42,0.8), 0 22px 45px rgba(0,0,0,0.85)';
+        }
+
+        // Matrix rain background
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height / fontSize;
+        }
+
+        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>
