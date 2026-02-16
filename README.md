@@ -26,7 +26,8 @@ datascience/
   about.html                # Background, experience, skills
   projects.html             # Expandable project cards with code snippets
   contact.html              # Contact info
-  tasks.html                # Private task manager (hidden)
+  tasks.html                # Private-style task manager (opened via `secret` command)
+dist/                       # Vite build output (auto-generated, git-ignored)
 package.json
 README.md
 ```
@@ -37,6 +38,10 @@ README.md
 - Typing animation on the home page
 - Interactive terminal that accepts commands (`help`, `ls`, `whoami`, `skills`, `projects`, `contact`, `date`, `secret`)
 - Expandable project cards with syntax-highlighted code snippets
+- Secret task manager with:
+  - Add, edit, complete, and delete tasks
+  - Fixed 10-color task palette (no color wheel)
+  - Cross-browser sync via Supabase (with local cache fallback)
 - Light/dark theme toggle (persists via localStorage)
 - Matrix rain background animation
 - Mobile responsive

@@ -160,6 +160,7 @@
             padding: 10px 12px;
             border-radius: 8px;
             border: 1px solid rgba(148,163,184,0.25);
+            border-left: 3px solid var(--task-color, rgba(148,163,184,0.35));
             background: rgba(15,23,42,0.85);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
@@ -194,8 +195,8 @@
         }
 
         .task-item.done .task-check {
-            background: var(--accent);
-            border-color: var(--accent);
+            background: var(--task-color, var(--accent));
+            border-color: var(--task-color, var(--accent));
             color: #020617;
         }
 
@@ -213,6 +214,28 @@
 
         .task-item:hover .task-text {
             background-color: rgba(56, 189, 248, 0.1);
+        }
+        .task-color-palette {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            max-width: 120px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .task-color-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.45);
+            background: var(--swatch-color);
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .task-color-swatch.active {
+            box-shadow: 0 0 0 1px rgba(2, 6, 23, 0.95), 0 0 0 2px var(--swatch-color);
         }
 
         .task-text-edit {
@@ -419,6 +442,10 @@
         const SUPABASE_TABLE = 'task_state';
         const SUPABASE_RECORD_ID = 'main';
 
+        const TASK_COLORS = ['#38bdf8', '#22c55e', '#f59e0b', '#f97373', '#a78bfa', '#f472b6', '#14b8a6', '#eab308', '#fb7185', '#94a3b8'];
+        const DEFAULT_TASK_COLOR = TASK_COLORS[0];
+        const REMOTE_SYNC_INTERVAL_MS = 30000;
+
         const taskList = document.getElementById('taskList');
         const taskCount = document.getElementById('taskCount');
 
@@ -431,6 +458,21 @@
             !SUPABASE_ANON_KEY.startsWith('%VITE_')
         );
 
+        function sanitizeColor(color) {
+            if (typeof color !== 'string') return DEFAULT_TASK_COLOR;
+            const normalized = color.trim().toLowerCase();
+            return TASK_COLORS.includes(normalized) ? normalized : DEFAULT_TASK_COLOR;
+        }
+
+        function normalizeTasks() {
+            tasks = (tasks || []).map((task) => ({
+                id: Number(task.id),
+                text: String(task.text ?? ''),
+                done: Boolean(task.done),
+                color: sanitizeColor(task.color)
+            })).filter((task) => Number.isFinite(task.id));
+        }
+
         function setLocalState() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, nextId }));
         }
@@ -442,6 +484,7 @@
                 const parsed = JSON.parse(data);
                 tasks = parsed.tasks || [];
                 nextId = parsed.nextId || 1;
+                normalizeTasks();
                 return true;
             } catch (error) {
                 console.error('Failed to parse local task cache:', error);
@@ -491,10 +534,12 @@
 
             tasks = rows[0].tasks || [];
             nextId = rows[0].next_id || 1;
+            normalizeTasks();
             return true;
         }
 
         function save() {
+            normalizeTasks();
             setLocalState();
             if (!supabaseEnabled) return;
 
@@ -515,6 +560,7 @@
             }
 
             if (!loaded) getLocalState();
+            normalizeTasks();
             render();
         }
 
@@ -523,9 +569,14 @@
             taskCount.textContent = tasks.length > 0 ? `${tasks.length} task${tasks.length !== 1 ? 's' : ''} · ${done} done` : '';
 
             let html = tasks.map(task => `
-                <div class="task-item ${task.done ? 'done' : ''}" id="task-${task.id}">
+                <div class="task-item ${task.done ? 'done' : ''}" id="task-${task.id}" style="--task-color: ${task.color};">
                     <div class="task-check" onclick="event.stopPropagation(); toggleTask(${task.id})"></div>
                     <span class="task-text" ondblclick="event.stopPropagation(); editTask(${task.id})">${escapeHtml(task.text)}</span>
+                    <div class="task-color-palette">
+                        ${TASK_COLORS.map(color => `
+                            <button type="button" class="task-color-swatch ${task.color === color ? 'active' : ''}" style="--swatch-color: ${color};" onclick="event.stopPropagation(); setTaskColor(${task.id}, '${color}')" aria-label="Set task color ${color}"></button>
+                        `).join('')}
+                    </div>
                     <span class="task-delete" onclick="event.stopPropagation(); deleteTask(${task.id})">✕</span>
                 </div>
             `).join('');
@@ -553,7 +604,7 @@
             // Re-apply event listeners for task items
             document.querySelectorAll('.task-item').forEach(item => {
                 item.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('task-delete') && !e.target.classList.contains('task-check')) {
+                    if (!e.target.classList.contains('task-delete') && !e.target.classList.contains('task-check') && !e.target.classList.contains('task-color-swatch')) {
                         toggleTask(parseInt(item.id.replace('task-', '')));
                     }
                 });
@@ -567,7 +618,7 @@
         }
 
         function addTask(text) {
-            tasks.push({ id: nextId++, text, done: false });
+            tasks.push({ id: nextId++, text, done: false, color: DEFAULT_TASK_COLOR });
             save();
             render();
         }
@@ -582,6 +633,14 @@
 
         function deleteTask(id) {
             tasks = tasks.filter(t => t.id !== id);
+            save();
+            render();
+        }
+
+        function setTaskColor(id, color) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            task.color = sanitizeColor(color);
             save();
             render();
         }
@@ -672,6 +731,15 @@
 
         // Refresh when returning to this tab, so other-browser changes are reflected quickly.
         window.addEventListener('focus', loadTasks);
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') loadTasks();
+        });
+        window.addEventListener('storage', (event) => {
+            if (event.key === STORAGE_KEY) loadTasks();
+        });
+        setInterval(() => {
+            if (document.visibilityState === 'visible') loadTasks();
+        }, REMOTE_SYNC_INTERVAL_MS);
 
         // Load tasks on page load
         loadTasks();
