@@ -152,7 +152,6 @@
             margin-bottom: 18px;
             min-height: 40px;
         }
-
         .task-item {
             display: flex;
             align-items: center;
@@ -165,8 +164,18 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: border-color 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease, transform 0.16s ease;
             user-select: none;
+        }
+
+        .task-item.dragging {
+            opacity: 0.35;
+            transform: scale(0.995);
+        }
+
+        .task-item.drag-over {
+            border-color: var(--accent);
+            box-shadow: inset 0 2px 0 0 var(--accent);
         }
 
         .task-item:hover {
@@ -192,6 +201,14 @@
             justify-content: center;
             font-size: 0.65rem;
             transition: all 0.2s;
+        }
+
+        .task-drag {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            letter-spacing: -0.08em;
+            cursor: grab;
+            user-select: none;
         }
 
         .task-item.done .task-check {
@@ -445,12 +462,20 @@
         const TASK_COLORS = ['#38bdf8', '#22c55e', '#f59e0b', '#f97373', '#a78bfa', '#f472b6', '#14b8a6', '#eab308', '#fb7185', '#94a3b8'];
         const DEFAULT_TASK_COLOR = TASK_COLORS[0];
         const REMOTE_SYNC_INTERVAL_MS = 30000;
+        const REMOTE_SAVE_DEBOUNCE_MS = 250;
 
         const taskList = document.getElementById('taskList');
         const taskCount = document.getElementById('taskCount');
 
         let tasks = [];
         let nextId = 1;
+        let dragTaskId = null;
+        let activeDragOverId = null;
+        let remoteSaveTimer = null;
+        let remoteSaveInFlight = false;
+        let pendingRemoteSave = false;
+        let loadTasksPromise = null;
+        let uiEventsBound = false;
         const supabaseEnabled = Boolean(
             SUPABASE_URL &&
             SUPABASE_ANON_KEY &&
@@ -542,13 +567,37 @@
             normalizeTasks();
             setLocalState();
             if (!supabaseEnabled) return;
+            queueRemoteSave();
+        }
 
-            saveRemote().catch((error) => {
+        function queueRemoteSave() {
+            pendingRemoteSave = true;
+            if (remoteSaveTimer) clearTimeout(remoteSaveTimer);
+            remoteSaveTimer = setTimeout(() => {
+                remoteSaveTimer = null;
+                flushRemoteSave();
+            }, REMOTE_SAVE_DEBOUNCE_MS);
+        }
+
+        async function flushRemoteSave() {
+            if (!supabaseEnabled || remoteSaveInFlight || !pendingRemoteSave) return;
+            pendingRemoteSave = false;
+            remoteSaveInFlight = true;
+
+            try {
+                await saveRemote();
+            } catch (error) {
                 console.error(error);
-            });
+            } finally {
+                remoteSaveInFlight = false;
+                if (pendingRemoteSave) flushRemoteSave();
+            }
         }
 
         async function loadTasks() {
+            if (loadTasksPromise) return loadTasksPromise;
+
+            loadTasksPromise = (async () => {
             let loaded = false;
             if (supabaseEnabled) {
                 try {
@@ -562,6 +611,13 @@
             if (!loaded) getLocalState();
             normalizeTasks();
             render();
+            })();
+
+            try {
+                await loadTasksPromise;
+            } finally {
+                loadTasksPromise = null;
+            }
         }
 
         function render() {
@@ -569,28 +625,27 @@
             taskCount.textContent = tasks.length > 0 ? `${tasks.length} task${tasks.length !== 1 ? 's' : ''} · ${done} done` : '';
 
             let html = tasks.map(task => `
-                <div class="task-item ${task.done ? 'done' : ''}" id="task-${task.id}" style="--task-color: ${task.color};">
-                    <div class="task-check" onclick="event.stopPropagation(); toggleTask(${task.id})"></div>
-                    <span class="task-text" ondblclick="event.stopPropagation(); editTask(${task.id})">${escapeHtml(task.text)}</span>
+                <div class="task-item ${task.done ? 'done' : ''}" id="task-${task.id}" style="--task-color: ${task.color};" draggable="true" ondragstart="onTaskDragStart(event, ${task.id})" ondragend="onTaskDragEnd(event)" ondragover="onTaskDragOver(event, ${task.id})" ondragleave="onTaskDragLeave(event, ${task.id})" ondrop="onTaskDrop(event, ${task.id})">
+                    <span class="task-drag" title="drag to reorder">::</span>
+                    <div class="task-check" onmousedown="event.stopPropagation()" onclick="event.stopPropagation(); toggleTask(${task.id})"></div>
+                    <span class="task-text" onclick="event.stopPropagation(); editTask(${task.id})">${escapeHtml(task.text)}</span>
                     <div class="task-color-palette">
                         ${TASK_COLORS.map(color => `
-                            <button type="button" class="task-color-swatch ${task.color === color ? 'active' : ''}" style="--swatch-color: ${color};" onclick="event.stopPropagation(); setTaskColor(${task.id}, '${color}')" aria-label="Set task color ${color}"></button>
+                            <button type="button" class="task-color-swatch ${task.color === color ? 'active' : ''}" style="--swatch-color: ${color};" onmousedown="event.stopPropagation()" onclick="event.stopPropagation(); setTaskColor(${task.id}, '${color}')" aria-label="Set task color ${color}"></button>
                         `).join('')}
                     </div>
-                    <span class="task-delete" onclick="event.stopPropagation(); deleteTask(${task.id})">✕</span>
+                    <span class="task-delete" onmousedown="event.stopPropagation()" onclick="event.stopPropagation(); deleteTask(${task.id})">✕</span>
                 </div>
             `).join('');
 
-            // Add the input field for new tasks
             html += `
-                <div class="task-add-item">
+                <div class="task-add-item" ondragover="onListDragOver(event)" ondrop="onListDrop(event)">
                     <input type="text" class="task-add-input" id="newTaskInput" placeholder="add a new task..." autocomplete="off" />
                 </div>
             `;
 
             taskList.innerHTML = html;
 
-            // Focus and setup the new task input
             const newTaskInput = document.getElementById('newTaskInput');
             newTaskInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
@@ -601,14 +656,91 @@
                 }
             });
 
-            // Re-apply event listeners for task items
-            document.querySelectorAll('.task-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('task-delete') && !e.target.classList.contains('task-check') && !e.target.classList.contains('task-color-swatch')) {
-                        toggleTask(parseInt(item.id.replace('task-', '')));
-                    }
-                });
-            });
+        }
+
+        function bindUiEvents() {
+            if (uiEventsBound) return;
+            uiEventsBound = true;
+        }
+
+        function moveTask(taskId, beforeTaskId = null) {
+            const sourceIndex = tasks.findIndex(t => t.id === taskId);
+            if (sourceIndex === -1) return;
+
+            const [task] = tasks.splice(sourceIndex, 1);
+            let insertIndex = beforeTaskId === null ? tasks.length : tasks.findIndex(t => t.id === beforeTaskId);
+            if (insertIndex < 0) insertIndex = tasks.length;
+
+            tasks.splice(insertIndex, 0, task);
+            save();
+            render();
+        }
+
+        function onTaskDragStart(event, id) {
+            if (
+                event.target.classList.contains('task-check') ||
+                event.target.classList.contains('task-delete') ||
+                event.target.classList.contains('task-color-swatch')
+            ) {
+                event.preventDefault();
+                return;
+            }
+
+            dragTaskId = id;
+            activeDragOverId = null;
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', String(id));
+            event.currentTarget.classList.add('dragging');
+        }
+
+        function onTaskDragEnd(event) {
+            dragTaskId = null;
+            activeDragOverId = null;
+            event.currentTarget.classList.remove('dragging');
+            document.querySelectorAll('.task-item.drag-over').forEach((item) => item.classList.remove('drag-over'));
+        }
+
+        function onTaskDragOver(event, overId) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            if (dragTaskId === overId) return;
+            if (activeDragOverId === overId) return;
+
+            if (activeDragOverId !== null) {
+                document.getElementById(`task-${activeDragOverId}`)?.classList.remove('drag-over');
+            }
+
+            activeDragOverId = overId;
+            event.currentTarget.classList.add('drag-over');
+        }
+
+        function onTaskDragLeave(event, overId) {
+            if (dragTaskId === overId) return;
+            if (activeDragOverId !== overId) return;
+            activeDragOverId = null;
+            event.currentTarget.classList.remove('drag-over');
+        }
+
+        function onTaskDrop(event, overId) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('drag-over');
+            activeDragOverId = null;
+
+            if (dragTaskId === null || dragTaskId === overId) return;
+            moveTask(dragTaskId, overId);
+        }
+
+        function onListDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+
+        function onListDrop(event) {
+            event.preventDefault();
+            if (dragTaskId === null) return;
+            activeDragOverId = null;
+            moveTask(dragTaskId, null);
         }
 
         function escapeHtml(str) {
@@ -633,6 +765,8 @@
 
         function deleteTask(id) {
             tasks = tasks.filter(t => t.id !== id);
+            dragTaskId = null;
+            activeDragOverId = null;
             save();
             render();
         }
@@ -688,6 +822,8 @@
 
         function clearCompleted() {
             tasks = tasks.filter(t => !t.done);
+            dragTaskId = null;
+            activeDragOverId = null;
             save();
             render();
         }
@@ -695,6 +831,8 @@
         function clearAll() {
             tasks = [];
             nextId = 1;
+            dragTaskId = null;
+            activeDragOverId = null;
             save();
             render();
         }
@@ -724,15 +862,40 @@
         const reduceMotion = window.matchMedia('prefers-reduced-motion: reduce').matches;
         const lowPowerDevice = window.matchMedia('(max-width: 640px)').matches;
         const matrixInterval = (reduceMotion || lowPowerDevice) ? 90 : 50;
-        if (!reduceMotion) {
-            setInterval(drawMatrix, matrixInterval);
+        let matrixAnimationFrame = null;
+        let lastMatrixTick = 0;
+
+        function runMatrixFrame(now) {
+            if (!lastMatrixTick || now - lastMatrixTick >= matrixInterval) {
+                drawMatrix();
+                lastMatrixTick = now;
+            }
+            matrixAnimationFrame = requestAnimationFrame(runMatrixFrame);
         }
+
+        function startMatrix() {
+            if (reduceMotion || matrixAnimationFrame !== null) return;
+            matrixAnimationFrame = requestAnimationFrame(runMatrixFrame);
+        }
+
+        function stopMatrix() {
+            if (matrixAnimationFrame === null) return;
+            cancelAnimationFrame(matrixAnimationFrame);
+            matrixAnimationFrame = null;
+        }
+
+        startMatrix();
         window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
         // Refresh when returning to this tab, so other-browser changes are reflected quickly.
         window.addEventListener('focus', loadTasks);
         window.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') loadTasks();
+            if (document.visibilityState === 'visible') {
+                loadTasks();
+                startMatrix();
+            } else {
+                stopMatrix();
+            }
         });
         window.addEventListener('storage', (event) => {
             if (event.key === STORAGE_KEY) loadTasks();
@@ -742,6 +905,7 @@
         }, REMOTE_SYNC_INTERVAL_MS);
 
         // Load tasks on page load
+        bindUiEvents();
         loadTasks();
     </script>
 </body>
