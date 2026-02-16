@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>about@aadhitya</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -296,7 +296,64 @@
             background: rgba(15,23,42,0.85);
             color: var(--accent);
         }
+        /* Cross-platform base tweaks */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
 
+        a, button, input, textarea {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        @media (max-width: 900px) {
+            .shell {
+                max-width: 100%;
+            }
+        }
+
+        @media (hover: none), (pointer: coarse) {
+            .theme-toggle,
+            .task-actions button,
+            .nav-card,
+            .project-item,
+            .task-item {
+                min-height: 44px;
+            }
+
+            .task-delete {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-right: max(10px, env(safe-area-inset-right));
+                padding-bottom: max(32px, env(safe-area-inset-bottom));
+                padding-left: max(10px, env(safe-area-inset-left));
+            }
+
+            input,
+            textarea,
+            select {
+                font-size: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+
+            #matrix-canvas {
+                display: none;
+            }
+        }
         @media (max-width: 640px) {
             body {
                 padding: 20px 10px 32px;
@@ -572,7 +629,12 @@
             }
         }
 
-        setInterval(drawMatrix, 50);
+        const reduceMotion = window.matchMedia('prefers-reduced-motion: reduce').matches;
+        const lowPowerDevice = window.matchMedia('(max-width: 640px)').matches;
+        const matrixInterval = (reduceMotion || lowPowerDevice) ? 90 : 50;
+        if (!reduceMotion) {
+            setInterval(drawMatrix, matrixInterval);
+        }
 
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
@@ -581,4 +643,7 @@
     </script>
 </body>
 </html>
+
+
+
 
