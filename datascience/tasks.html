@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tasks@aadhitya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #020617;
+            --border-subtle: #1f2933;
+            --text-main: #e5e7eb;
+            --text-muted: #6b7280;
+            --accent: #38bdf8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 16px 48px;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .shell {
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(3,7,18,0.98));
+            box-shadow: 0 0 0 1px rgba(15,23,42,0.8), 0 22px 45px rgba(0,0,0,0.85);
+            padding: 20px 22px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .shell-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            text-transform: lowercase;
+            color: var(--text-muted);
+        }
+
+        .shell-dots { display: flex; gap: 6px; }
+        .shell-dot { width: 10px; height: 10px; border-radius: 999px; }
+        .shell-dot.red { background: #f97373; }
+        .shell-dot.yellow { background: #facc6b; }
+        .shell-dot.green { background: #4ade80; }
+
+        .shell-title {
+            border-radius: 999px;
+            padding: 2px 10px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.35);
+        }
+
+        .prompt {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 18px;
+        }
+
+        .prompt .user { color: #22c55e; }
+        .prompt .path { color: var(--accent); }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .top-bar .label {
+            color: var(--accent);
+            font-size: 0.85rem;
+        }
+
+        .top-bar .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .top-bar .back-link:hover { color: var(--accent); }
+
+        header { margin-bottom: 18px; }
+
+        header h1 {
+            margin: 0 0 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .subtitle {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        main {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 18px;
+        }
+
+        .task-add-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px dashed rgba(148,163,184,0.35);
+            background: rgba(15,23,42,0.5);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .task-add-item:hover {
+            border-color: var(--accent);
+            background: rgba(15,23,42,0.75);
+        }
+
+        .task-add-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .task-add-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .task-list {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 18px;
+            min-height: 40px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(148,163,184,0.25);
+            background: rgba(15,23,42,0.85);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .task-item:hover {
+            border-color: var(--accent);
+        }
+
+        .task-item.done {
+            opacity: 0.5;
+        }
+
+        .task-item.done .task-text {
+            text-decoration: line-through;
+        }
+
+        .task-check {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid var(--text-muted);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            transition: all 0.2s;
+        }
+
+        .task-item.done .task-check {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #020617;
+        }
+
+        .task-item.done .task-check::before {
+            content: '✓';
+        }
+
+        .task-text {
+            flex: 1;
+            cursor: text;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .task-item:hover .task-text {
+            background-color: rgba(56, 189, 248, 0.1);
+        }
+
+        .task-text-edit {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            padding: 4px 6px;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .task-delete {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.2s, color 0.2s;
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+
+        .task-item:hover .task-delete { opacity: 1; }
+        .task-delete:hover { color: #f97373; }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+        }
+
+        .task-actions button {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid rgba(148,163,184,0.35);
+            background: rgba(15,23,42,0.85);
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .task-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .task-actions button.danger:hover {
+            border-color: #f97373;
+            color: #f97373;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            padding: 24px 0;
+        }
+
+        .task-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        footer {
+            padding-top: 20px;
+            margin-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-tag {
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.45);
+            background: rgba(15,23,42,0.85);
+            color: var(--accent);
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 20px 10px 32px; }
+            .shell { padding: 16px 14px 20px; }
+            header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <div class="shell-header">
+            <div class="shell-dots">
+                <div class="shell-dot red"></div>
+                <div class="shell-dot yellow"></div>
+                <div class="shell-dot green"></div>
+            </div>
+            <div class="shell-title">tasks.db</div>
+        </div>
+
+        <div class="prompt">
+            <span class="user">aadhitya@dev</span><span class="path">:~/private</span>$ ./tasks
+        </div>
+
+        <div class="top-bar">
+            <span class="label">task manager</span>
+            <a href="home.html" class="back-link">← back</a>
+        </div>
+
+        <header>
+            <h1>Tasks</h1>
+            <p class="subtitle">private workspace</p>
+        </header>
+
+        <main>
+            <div class="task-count" id="taskCount"></div>
+            <div class="task-list" id="taskList"></div>
+
+            <div class="task-actions">
+                <button onclick="clearCompleted()">clear done</button>
+                <button class="danger" onclick="clearAll()">clear all</button>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2025 aadhitya varshan</span>
+            <span class="footer-tag">mode: private</span>
+        </footer>
+    </div>
+
+    <canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.03;"></canvas>
+
+    <script>
+        const STORAGE_KEY = 'aadhitya_tasks';
+        const taskList = document.getElementById('taskList');
+        const taskCount = document.getElementById('taskCount');
+
+        let tasks = [];
+        let nextId = 1;
+
+        function save() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, nextId }));
+        }
+
+        function loadTasks() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+                const parsed = JSON.parse(data);
+                tasks = parsed.tasks || [];
+                nextId = parsed.nextId || 1;
+            }
+            render();
+        }
+
+        function render() {
+            const done = tasks.length > 0 ? tasks.filter(t => t.done).length : 0;
+            taskCount.textContent = tasks.length > 0 ? `${tasks.length} task${tasks.length !== 1 ? 's' : ''} · ${done} done` : '';
+
+            let html = tasks.map(task => `
+                <div class="task-item ${task.done ? 'done' : ''}" id="task-${task.id}">
+                    <div class="task-check" onclick="event.stopPropagation(); toggleTask(${task.id})"></div>
+                    <span class="task-text" ondblclick="event.stopPropagation(); editTask(${task.id})">${escapeHtml(task.text)}</span>
+                    <span class="task-delete" onclick="event.stopPropagation(); deleteTask(${task.id})">✕</span>
+                </div>
+            `).join('');
+
+            // Add the input field for new tasks
+            html += `
+                <div class="task-add-item">
+                    <input type="text" class="task-add-input" id="newTaskInput" placeholder="add a new task..." autocomplete="off" />
+                </div>
+            `;
+
+            taskList.innerHTML = html;
+
+            // Focus and setup the new task input
+            const newTaskInput = document.getElementById('newTaskInput');
+            newTaskInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const text = newTaskInput.value.trim();
+                    if (text) {
+                        addTask(text);
+                    }
+                }
+            });
+
+            // Re-apply event listeners for task items
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('task-delete') && !e.target.classList.contains('task-check')) {
+                        toggleTask(parseInt(item.id.replace('task-', '')));
+                    }
+                });
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function addTask(text) {
+            tasks.push({ id: nextId++, text, done: false });
+            save();
+            render();
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            task.done = !task.done;
+            save();
+            render();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            save();
+            render();
+        }
+
+        function editTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            const taskItem = document.getElementById(`task-${id}`);
+            const taskTextSpan = taskItem.querySelector('.task-text:last-of-type');
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'task-text-edit';
+            input.value = task.text;
+
+            taskTextSpan.replaceWith(input);
+            input.focus();
+            input.select();
+
+            function saveEdit() {
+                const newText = input.value.trim();
+                if (newText) {
+                    task.text = newText;
+                    save();
+                }
+                render();
+                setTimeout(() => {
+                    if (task.text === newText) {
+                        document.getElementById(`task-${id}`)?.querySelector('.task-text:last-of-type')?.focus();
+                    }
+                }, 0);
+            }
+
+            input.addEventListener('blur', saveEdit);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    saveEdit();
+                } else if (e.key === 'Escape') {
+                    render();
+                }
+            });
+        }
+
+
+        function clearCompleted() {
+            tasks = tasks.filter(t => !t.done);
+            save();
+            render();
+        }
+
+        function clearAll() {
+            tasks = [];
+            nextId = 1;
+            save();
+            render();
+        }
+
+        // Matrix rain background
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for (let i = 0; i < columns; i++) drops[i] = Math.random() * canvas.height / fontSize;
+        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // Load tasks on page load
+        loadTasks();
+    </script>
+</body>
+</html>

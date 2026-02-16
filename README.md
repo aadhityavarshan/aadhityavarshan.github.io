@@ -17,17 +17,30 @@
 
 ## Project Structure
 ```
-index.html
+index.html                  # Redirects to datascience/home.html
 src/
-  main.js
-  style.css
+  main.js                   # Frontend scripts
+  style.css                 # Global styles
 datascience/
-  about.html
-  contact.html
-  projects.html
+  home.html                 # Landing page with interactive terminal
+  about.html                # Background, experience, skills
+  projects.html             # Expandable project cards with code snippets
+  contact.html              # Contact info
+  tasks.html                # Private task manager (hidden)
 package.json
 README.md
 ```
 
+## Features
+
+- Terminal-themed UI with JetBrains Mono font
+- Typing animation on the home page
+- Interactive terminal that accepts commands (`help`, `ls`, `whoami`, `skills`, `projects`, `contact`, `date`, `secret`)
+- Expandable project cards with syntax-highlighted code snippets
+- Light/dark theme toggle (persists via localStorage)
+- Matrix rain background animation
+- Mobile responsive
+
 ## About
-This is a personal portfolio website focused on coding and data science projects. Visitors are automatically redirected to your data science portfolio page. All code is in the `src` folder for easy local development and deployment. Powered by Vite for instant updates as you code.
+
+Personal portfolio website focused on data science and machine learning projects. Visitors are automatically redirected to the data science portfolio page. Powered by Vite for instant updates as you code.

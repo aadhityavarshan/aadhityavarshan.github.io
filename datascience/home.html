@@ -602,7 +602,8 @@
 
         terminalInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                const command = terminalInput.value.trim().toLowerCase();
+                const rawCommand = terminalInput.value.trim();
+                const command = rawCommand.toLowerCase();
 
                 // Display command
                 const commandLine = document.createElement('div');
@@ -610,8 +611,27 @@
                 commandLine.textContent = '$ ' + terminalInput.value;
                 terminalOutput.appendChild(commandLine);
 
+                // Handle /login
+                if (command.startsWith('/login')) {
+                    const password = rawCommand.split(' ').slice(1).join(' ');
+                    if (password === 'deathofmaari') {
+                        const output = document.createElement('div');
+                        output.className = 'terminal-line output';
+                        output.textContent = 'Access granted. Redirecting...';
+                        output.style.color = '#22c55e';
+                        terminalOutput.appendChild(output);
+                        setTimeout(() => {
+                            window.location.href = 'tasks.html';
+                        }, 600);
+                    } else {
+                        const output = document.createElement('div');
+                        output.className = 'terminal-line output';
+                        output.textContent = 'Access denied.';
+                        output.style.color = '#f97373';
+                        terminalOutput.appendChild(output);
+                    }
                 // Process command
-                if (command === 'clear') {
+                } else if (command === 'clear') {
                     terminalOutput.innerHTML = '';
                 } else if (commands[command] !== undefined) {
                     const output = document.createElement('div');
