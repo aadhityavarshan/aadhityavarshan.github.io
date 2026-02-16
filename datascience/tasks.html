@@ -356,23 +356,108 @@
 
     <script>
         const STORAGE_KEY = 'aadhitya_tasks';
+        // Set these in .env (Vite): VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+        const SUPABASE_URL = '%VITE_SUPABASE_URL%';
+        const SUPABASE_ANON_KEY = '%VITE_SUPABASE_ANON_KEY%';
+        const SUPABASE_TABLE = 'task_state';
+        const SUPABASE_RECORD_ID = 'main';
+
         const taskList = document.getElementById('taskList');
         const taskCount = document.getElementById('taskCount');
 
         let tasks = [];
         let nextId = 1;
+        const supabaseEnabled = Boolean(
+            SUPABASE_URL &&
+            SUPABASE_ANON_KEY &&
+            !SUPABASE_URL.startsWith('%VITE_') &&
+            !SUPABASE_ANON_KEY.startsWith('%VITE_')
+        );
 
-        function save() {
+        function setLocalState() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, nextId }));
         }
 
-        function loadTasks() {
+        function getLocalState() {
             const data = localStorage.getItem(STORAGE_KEY);
-            if (data) {
+            if (!data) return false;
+            try {
                 const parsed = JSON.parse(data);
                 tasks = parsed.tasks || [];
                 nextId = parsed.nextId || 1;
+                return true;
+            } catch (error) {
+                console.error('Failed to parse local task cache:', error);
+                return false;
             }
+        }
+
+        async function saveRemote() {
+            const endpoint = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?on_conflict=id`;
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json',
+                    Prefer: 'resolution=merge-duplicates,return=minimal'
+                },
+                body: JSON.stringify({
+                    id: SUPABASE_RECORD_ID,
+                    tasks,
+                    next_id: nextId
+                })
+            });
+
+            if (!response.ok) {
+                const details = await response.text();
+                throw new Error(`Supabase save failed: ${response.status} ${details}`);
+            }
+        }
+
+        async function loadRemote() {
+            const endpoint = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?id=eq.${encodeURIComponent(SUPABASE_RECORD_ID)}&select=tasks,next_id`;
+            const response = await fetch(endpoint, {
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            });
+
+            if (!response.ok) {
+                const details = await response.text();
+                throw new Error(`Supabase load failed: ${response.status} ${details}`);
+            }
+
+            const rows = await response.json();
+            if (!Array.isArray(rows) || rows.length === 0) return false;
+
+            tasks = rows[0].tasks || [];
+            nextId = rows[0].next_id || 1;
+            return true;
+        }
+
+        function save() {
+            setLocalState();
+            if (!supabaseEnabled) return;
+
+            saveRemote().catch((error) => {
+                console.error(error);
+            });
+        }
+
+        async function loadTasks() {
+            let loaded = false;
+            if (supabaseEnabled) {
+                try {
+                    loaded = await loadRemote();
+                    if (loaded) setLocalState();
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            if (!loaded) getLocalState();
             render();
         }
 
@@ -522,6 +607,9 @@
         }
         setInterval(drawMatrix, 50);
         window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // Refresh when returning to this tab, so other-browser changes are reflected quickly.
+        window.addEventListener('focus', loadTasks);
 
         // Load tasks on page load
         loadTasks();
